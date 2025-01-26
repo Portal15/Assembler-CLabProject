@@ -1,0 +1,3 @@
+/Users/yonatanbenyehuda/Desktop/Computer Science/University/C/Course20465/CLabProject/cmake-build-debug/CMakeFiles/Maman14Project.dir
+/Users/yonatanbenyehuda/Desktop/Computer Science/University/C/Course20465/CLabProject/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/yonatanbenyehuda/Desktop/Computer Science/University/C/Course20465/CLabProject/cmake-build-debug/CMakeFiles/rebuild_cache.dir
