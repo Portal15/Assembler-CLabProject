@@ -17,7 +17,7 @@ int main(void) {
     // free(mcros);
     // free(forbiddenWords);
 
-    char* input = malloc(sizeof(char) * 100);
+    //char* input = malloc(sizeof(char) * 100);
     fgets(input, 100, stdin);
     line l = analyzeLine(input, 1);
     int isValid = checkValidation(&l, "jmp\nmov", "bla");
