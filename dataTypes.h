@@ -1,0 +1,66 @@
+#ifndef DATATYPES_H
+#define DATATYPES_H
+
+typedef struct command {
+    char *name;
+    /* for parm1 */
+    char* parm1Addressing0; /* Number Value */
+    char* parm1Addressing1; /* Variable Name */
+    char* parm1Addressing2; /* Variable Name */
+    char* parm1Addressing3; /* Register Number */
+    /* for parm2 */
+    char* parm2Addressing0; /* Number Value */
+    char* parm2Addressing1; /* Variable Name */
+    char* parm2Addressing2; /* Variable Name */
+    char* parm2Addressing3; /* Register Number */
+    /* for error handling */
+    int error;
+    int isFilled[3];
+} command;
+
+typedef struct var {
+    int digit;
+    char* letter;
+    struct var *next;
+} var;
+
+typedef struct line{
+    int lineNum;
+    char* label;
+    command *cmd;
+    var *vars;
+} line;
+
+/* For object table */
+typedef struct objectTableCommands {
+    char *name;
+    int line;
+    struct objectTableCommands *next;
+} objectTableCommands;
+
+typedef struct objectTableData {
+    char *name;
+    var value;
+    struct objectTableData *next;
+} objectTableData;
+
+typedef struct objectTableExtern {
+    char *name;
+    int line;
+    struct objectTableExtern *next;
+} objectTableExtern;
+
+typedef struct objectTableEntry {
+    char *name;
+    int address;
+    struct objectTableEntry *next;
+} objectTableEntry;
+
+typedef struct objectTable {
+    objectTableCommands *commands;
+    objectTableData *data;
+    objectTableExtern *externs;
+    objectTableEntry *entries;
+} objectTable;
+
+#endif //DATATYPES_H

@@ -77,6 +77,7 @@ line analyzeLine(char *inputedLine, int lineNum) {
 
     /* Step 5: Skip assembler directives */
     if (currentParm[0] == '.') {
+        currentParm++;
         free(currentParm);
         free(label);
         free(cmd);
