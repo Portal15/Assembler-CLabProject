@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
-project(Maman14Project)
+project(Maman14Project C)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD 11)
 
 add_executable(Maman14Project
         main.c
@@ -11,3 +11,5 @@ add_executable(Maman14Project
         lineValidation.c
         utils.c
 )
+
+target_include_directories(Maman14Project PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

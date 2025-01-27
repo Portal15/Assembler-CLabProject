@@ -19,7 +19,8 @@ int main(void) {
 
     char* input = malloc(sizeof(char) * 100);
     fgets(input, 100, stdin);
-    line l = analyzeLine(input, 1);
+    objectTable ot = {NULL, NULL, NULL};
+    line l = analyzeLine(input, 1, &ot);
     int isValid = checkValidation(&l, "jmp\nmov", "bla");
     free(input);
     free(l.cmd);

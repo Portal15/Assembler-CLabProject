@@ -22,7 +22,7 @@
 #define INVALID_PARAMETER_NOT_A_REGISTER_ERROR 25
 #define INVALID_LABEL_NAME_ERROR 26
 #define INVALID_COMMAND_NAME_ERROR 27
-
+#define INVALID_PARAMETER_NOT_A_STRING_ERROR 28
 
 /* This function prints an error message to stderr.
  * errorType - the type of the error

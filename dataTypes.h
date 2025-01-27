@@ -14,13 +14,14 @@ typedef struct command {
     char* parm2Addressing2; /* Variable Name */
     char* parm2Addressing3; /* Register Number */
     /* for error handling */
-    int error;
     int isFilled[3];
 } command;
 
 typedef struct var {
-    int digit;
-    char* letter;
+    int varType; /* 0 - Number, 1 - Letter , 2 - extern , 3 - entry*/
+    char* label;
+    char* digit;
+    char letter;
     struct var *next;
 } var;
 
@@ -29,6 +30,7 @@ typedef struct line{
     char* label;
     command *cmd;
     var *vars;
+    int error;
 } line;
 
 /* For object table */

@@ -9,6 +9,6 @@
 #define MAX_SIZE_OF_STRING 100
 
 
-line analyzeLine(char *inputedLine, int lineNum);
+line analyzeLine(char *inputedLine, int lineNum, objectTable *ot);
 
 #endif // LINE_ANALYZER_H

@@ -1,12 +1,14 @@
 #include "lineAnalyzer.h"
 #include "utils.h"
 #include "errorHandler.h"
+#include "dataTypes.h"
 
 int isNumber(const char *str);
+int isLetter(const char *str);
 int isRegister(const char *str);
 
 int checkValidation(line *l, char *forbiddenWords, char* vars){
-    if (l->cmd->error != 0){ /* The error was already act in the other file */
+    if (l->error != 0){ /* The error was already act in the other file */
         return 0;
     }
 
@@ -16,28 +18,60 @@ int checkValidation(line *l, char *forbiddenWords, char* vars){
     }
 
     /* TODO: FIX THIS IF */
-    if(isForbiddenWord(l->cmd->name, forbiddenWords)){
-        printErrorMsg(INVALID_COMMAND_NAME_ERROR, l->lineNum);
-        return 0;
+    if (l->cmd != NULL) {
+        if(l->cmd->name != NULL && isForbiddenWord(l->cmd->name, forbiddenWords)){
+            printErrorMsg(INVALID_COMMAND_NAME_ERROR, l->lineNum);
+            return 0;
+        }
+
+        if(l->cmd->parm1Addressing0 != NULL && !isNumber(l->cmd->parm1Addressing0)){
+            printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
+            return 0;
+        }
+
+        if(l->cmd->parm1Addressing3 != NULL && !isRegister(l->cmd->parm1Addressing3)){
+            printErrorMsg(INVALID_PARAMETER_NOT_A_REGISTER_ERROR, l->lineNum);
+            return 0;
+        }
+        if(l->cmd->parm2Addressing0 != NULL && !isNumber(l->cmd->parm2Addressing0)){
+            printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
+            return 0;
+        }
+
+        if(l->cmd->parm2Addressing3 != NULL && !isRegister(l->cmd->parm2Addressing3)){
+            printErrorMsg(INVALID_PARAMETER_NOT_A_REGISTER_ERROR, l->lineNum);
+            return 0;
+        }
     }
 
-    if(l->cmd->parm1Addressing0 != NULL && !isNumber(l->cmd->parm1Addressing0)){
-        printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
-        return 0;
-    }
-
-    if(l->cmd->parm1Addressing3 != NULL && !isRegister(l->cmd->parm1Addressing3)){
-        printErrorMsg(INVALID_PARAMETER_NOT_A_REGISTER_ERROR, l->lineNum);
-        return 0;
-    }
-    if(l->cmd->parm2Addressing0 != NULL && !isNumber(l->cmd->parm2Addressing0)){
-        printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
-        return 0;
-    }
-
-    if(l->cmd->parm2Addressing3 != NULL && !isRegister(l->cmd->parm2Addressing3)){
-        printErrorMsg(INVALID_PARAMETER_NOT_A_REGISTER_ERROR, l->lineNum);
-        return 0;
+    if (l->vars != NULL) {
+        var temp = *l->vars;
+        if (l->vars->varType == 0) {
+            while (temp.next != NULL) {
+                if (temp.digit != NULL && !isNumber(temp.digit)) {
+                    printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
+                    return 0;
+                }
+                temp = *temp.next;
+            }
+            if (temp.digit != NULL && !isNumber(temp.digit)) {
+                printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
+                return 0;
+            }
+        }
+        if (l->vars->varType == 1) {
+            while (temp.next != NULL) {
+                if (temp.digit != NULL && !isLetter(temp.digit)) {
+                    printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
+                    return 0;
+                }
+                temp = *temp.next;
+            }
+            if (temp.digit != NULL && !isNumber(temp.digit)) {
+                printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
+                return 0;
+            }
+        }
     }
 
     return 1;
@@ -69,6 +103,10 @@ int isNumber(const char *str){
         str++;
     }
     return flag;
+}
+
+int isLetter(const char *str) {
+    return isalpha(*str) && str[1] == '\0';
 }
 
 int isRegister(const char *str) {

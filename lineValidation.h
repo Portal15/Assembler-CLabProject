@@ -1,7 +1,7 @@
 #ifndef LINE_VALIDATION_H
 #define LINE_VALIDATION_H
 
-#include "lineAnalyzer.h"
+#include "dataTypes.h"
 
 
 int checkValidation(line *l, char *forbiddenWords, char* vars);

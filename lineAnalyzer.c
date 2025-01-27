@@ -4,14 +4,17 @@
 #include <ctype.h>
 #include "lineAnalyzer.h"
 #include "errorHandler.h"
+#include "utils.h"
 
 char *removeSpacesUntilChar(char *line);
 char *getStringUntilNonLetterChar(char *str);
 char *removeUntilNonLetter(char *str);
 int isEndOfString(const char *str);
 void freeCommand(command *cmd);
+void addDigitToVar(var *v, char* digit);
+void addLetterToVar(var *v, char letter);
 
-line analyzeLine(char *inputedLine, int lineNum) {
+line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     line newLine;
     char *label = NULL;
     command *cmd = NULL;
@@ -42,6 +45,7 @@ line analyzeLine(char *inputedLine, int lineNum) {
     /* Step 3: Extract first parameter */
     currentParm = getStringUntilNonLetterChar(inputedLine);
     if (currentParm == NULL) {
+        newLine.error = MEMORY_ALLOCATION_ERROR;
         free(cmd);
         return newLine;
     }
@@ -68,19 +72,182 @@ line analyzeLine(char *inputedLine, int lineNum) {
 
         currentParm = getStringUntilNonLetterChar(inputedLine); /* Step 4.5: Extract command name */
         if (currentParm == NULL) {
+            newLine.error = MEMORY_ALLOCATION_ERROR;
             free(label);
             free(cmd);
             return newLine;
         }
         inputedLine = removeUntilNonLetter(inputedLine);
     }
+    newLine.label = label;
 
     /* Step 5: Skip assembler directives */
     if (currentParm[0] == '.') {
-        currentParm++;
-        free(currentParm);
-        free(label);
+        inputedLine = removeSpacesUntilChar(inputedLine);
+        if (isEndOfString(inputedLine)) {
+            free(currentParm);
+            free(cmd);
+            return newLine;
+        }
+        if (strcmp(currentParm, ".extern") == 0) {
+            vars = (var *)malloc(sizeof(var));
+            currentParm = getStringUntilNonLetterChar(inputedLine);
+            if (currentParm == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(label);
+                free(cmd);
+                free(vars);
+                return newLine;
+            }
+            inputedLine = removeUntilNonLetter(inputedLine);
+            inputedLine = removeSpacesUntilChar(inputedLine);
+            if (!isEndOfString(inputedLine)) {
+                printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
+                newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+                free(label);
+                free(cmd);
+                return newLine;
+            }
+            vars->label = strdup(currentParm);
+            vars->varType = 2;
+            newLine.vars = vars;
+            free(cmd);
+            return newLine;
+        }
+        if (strcmp(currentParm, ".entry") == 0) {
+            vars = (var *)malloc(sizeof(var));
+            currentParm = getStringUntilNonLetterChar(inputedLine);
+            if (currentParm == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(cmd);
+                free(label);
+                free(vars);
+                return newLine;
+            }
+            inputedLine = removeUntilNonLetter(inputedLine);
+            inputedLine = removeSpacesUntilChar(inputedLine);
+            if (!isEndOfString(inputedLine)) {
+                printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
+                newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+                free(label);
+                free(cmd);
+                return newLine;
+            }
+            vars->label = strdup(currentParm);
+            vars->varType = 3;
+            newLine.vars = vars;
+            free(currentParm);
+            free(label);
+            free(cmd);
+            return newLine;
+        }
+        if (strcmp(currentParm, ".data") == 0) {
+            vars = (var *)malloc(sizeof(var));
+            currentParm = getStringUntilNonLetterChar(inputedLine);
+            if (currentParm == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(label);
+                free(cmd);
+                free(vars);
+                return newLine;
+            }
+            inputedLine = removeUntilNonLetter(inputedLine);
+
+            vars->varType = 0;
+            vars->digit = strdup(currentParm);
+            inputedLine = removeSpacesUntilChar(inputedLine);
+
+            while (!isEndOfString(inputedLine)) {
+                if (inputedLine[0] != ',') {
+                    printErrorMsg(MISSING_COMMA_ERROR, lineNum);
+                    newLine.error = MISSING_COMMA_ERROR;
+                    free(label);
+                    free(cmd);
+                    return newLine;
+                }
+                inputedLine++;
+                inputedLine = removeSpacesUntilChar(inputedLine);
+                if (inputedLine[0] == ',') {
+                    printErrorMsg(MULTIPLE_COMMA_ERROR, lineNum);
+                    newLine.error = MULTIPLE_COMMA_ERROR;
+                    free(label);
+                    free(cmd);
+                    return newLine;
+                }
+                if (isEndOfString(inputedLine)) {
+                    printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
+                    newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+                    free(label);
+                    free(cmd);
+                    return newLine;
+                }
+                currentParm = getStringUntilNonLetterChar(inputedLine);
+                if (currentParm == NULL) {
+                    newLine.error = MEMORY_ALLOCATION_ERROR;
+                    free(label);
+                    free(cmd);
+                    free(vars);
+                    return newLine;
+                }
+                inputedLine = removeUntilNonLetter(inputedLine);
+
+                addDigitToVar(vars, currentParm);
+                inputedLine = removeSpacesUntilChar(inputedLine);
+            }
+
+            newLine.vars = vars;
+            free(cmd);
+            return newLine;
+        }
+        if (strcmp(currentParm, ".string") == 0) {
+            vars = (var *)malloc(sizeof(var));
+            currentParm = getStringUntilNonLetterChar(inputedLine);
+            if (currentParm == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(cmd);
+                free(label);
+                free(vars);
+                return newLine;
+            }
+            inputedLine = removeUntilNonLetter(inputedLine);
+            if (currentParm[0] != '"') {
+                printErrorMsg(INVALID_PARAMETER_NOT_A_STRING_ERROR, lineNum);
+                newLine.error = INVALID_PARAMETER_NOT_A_STRING_ERROR;
+                free(cmd);
+                return newLine;
+            }
+            currentParm++;
+            vars->varType = 1;
+            vars->letter = currentParm[0];
+            currentParm++;
+            while (*currentParm != '"') {
+                if (*currentParm == '\0') {
+                    printErrorMsg(INVALID_PARAMETER_NOT_A_STRING_ERROR, lineNum);
+                    newLine.error = INVALID_PARAMETER_NOT_A_STRING_ERROR;
+                    free(cmd);
+                    return newLine;
+                }
+                addLetterToVar(vars, currentParm[0]);
+                currentParm++;
+            }
+            addLetterToVar(vars, '\0');
+
+            inputedLine = removeSpacesUntilChar(inputedLine);
+            if (!isEndOfString(inputedLine)) {
+                printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
+                newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+                free(cmd);
+                return newLine;
+            }
+            newLine.vars = vars;
+            free(cmd);
+            return newLine;
+        }
         free(cmd);
+        free(label);
+        free(vars);
+        printErrorMsg(INVALID_COMMAND_NAME_ERROR, lineNum);
+        newLine.error = INVALID_COMMAND_NAME_ERROR;
         return newLine;
     }
 
@@ -106,7 +273,7 @@ line analyzeLine(char *inputedLine, int lineNum) {
     }
 
     if (inputedLine[0] == ',') { /* Step 9: Check for illegal comma */
-        cmd->error = ILLEGAL_COMMA_ERROR;
+        newLine.error = ILLEGAL_COMMA_ERROR;
         printErrorMsg(ILLEGAL_COMMA_ERROR, lineNum);
         newLine.label = label;
         newLine.cmd = cmd;
@@ -116,6 +283,7 @@ line analyzeLine(char *inputedLine, int lineNum) {
     currentParm = getStringUntilNonLetterChar(inputedLine); /* Step 10: Extract first parameter */
 
     if (currentParm == NULL) {
+        newLine.error = MEMORY_ALLOCATION_ERROR;
         free(label);
         freeCommand(cmd);
         return newLine;
@@ -145,16 +313,14 @@ line analyzeLine(char *inputedLine, int lineNum) {
 
     /* Step 13: Check if line is empty */
     if (isEndOfString(inputedLine)) {
-        newLine.label = label;
         newLine.cmd = cmd;
         return newLine;
     }
 
     /* Step 14: Check for missing comma */
     if (inputedLine[0] != ',') {
-        cmd->error = MISSING_COMMA_ERROR;
+        newLine.error = MISSING_COMMA_ERROR;
         printErrorMsg(MISSING_COMMA_ERROR, lineNum);
-        newLine.label = label;
         newLine.cmd = cmd;
         return newLine;
     }
@@ -165,18 +331,16 @@ line analyzeLine(char *inputedLine, int lineNum) {
 
     /* Step 16: Check if line is empty */
     if (isEndOfString(inputedLine)) {
-        cmd->error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+        newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
         printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
-        newLine.label = label;
         newLine.cmd = cmd;
         return newLine;
     }
 
     /* Step 17: Check for multiple comma */
     if (inputedLine[0] == ',') {
-        cmd->error = MULTIPLE_COMMA_ERROR;
+        newLine.error = MULTIPLE_COMMA_ERROR;
         printErrorMsg(MULTIPLE_COMMA_ERROR, lineNum);
-        newLine.label = label;
         newLine.cmd = cmd;
         return newLine;
     }
@@ -184,6 +348,7 @@ line analyzeLine(char *inputedLine, int lineNum) {
     /* Step 18: Extract second parameter */
     currentParm = getStringUntilNonLetterChar(inputedLine);
     if (currentParm == NULL) {
+        newLine.error = MEMORY_ALLOCATION_ERROR;
         free(label);
         freeCommand(cmd);
         return newLine;
@@ -213,11 +378,10 @@ line analyzeLine(char *inputedLine, int lineNum) {
 
     /* Step 21: Check if line is empty */
     if (!isEndOfString(inputedLine)) {
-        cmd->error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+        newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
         printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
     }
 
-    newLine.label = label;
     newLine.cmd = cmd;
     newLine.vars = vars;
     return newLine;
@@ -272,4 +436,20 @@ void freeCommand(command *cmd) {
         free(cmd->parm2Addressing3);
         free(cmd);
     }
+}
+
+void addDigitToVar(var *v, char* digit) {
+    while (v->next != NULL) {
+        v = v->next;
+    }
+    v->next = (var *)malloc(sizeof(var));
+    v->next->digit = digit;
+}
+
+void addLetterToVar(var *v, char letter) {
+    while (v->next != NULL) {
+        v = v->next;
+    }
+    v->next = (var *)malloc(sizeof(var));
+    v->next->letter = letter;
 }
