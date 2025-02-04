@@ -13,6 +13,7 @@ int isEndOfString(const char *str);
 void freeCommand(command *cmd);
 void addDigitToVar(var *v, char* digit);
 void addLetterToVar(var *v, char letter);
+char *getStringUntilNonQuotationMarks(char *str);
 
 line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     line newLine;
@@ -27,7 +28,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
 
     cmd = (command *)malloc(sizeof(command));
     if (cmd == NULL) {
-        printErrorMsg(MEMORY_ALLOCATION_ERROR, lineNum);
+        newLine.error = MEMORY_ALLOCATION_ERROR;
         return newLine;
     }
     /* Initialize command structure */
@@ -102,7 +103,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             inputedLine = removeUntilNonLetter(inputedLine);
             inputedLine = removeSpacesUntilChar(inputedLine);
             if (!isEndOfString(inputedLine)) {
-                printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
                 newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
                 free(label);
                 free(cmd);
@@ -127,7 +127,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             inputedLine = removeUntilNonLetter(inputedLine);
             inputedLine = removeSpacesUntilChar(inputedLine);
             if (!isEndOfString(inputedLine)) {
-                printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
                 newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
                 free(label);
                 free(cmd);
@@ -137,7 +136,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             vars->varType = 3;
             newLine.vars = vars;
             free(currentParm);
-            free(label);
             free(cmd);
             return newLine;
         }
@@ -159,7 +157,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
 
             while (!isEndOfString(inputedLine)) {
                 if (inputedLine[0] != ',') {
-                    printErrorMsg(MISSING_COMMA_ERROR, lineNum);
                     newLine.error = MISSING_COMMA_ERROR;
                     free(label);
                     free(cmd);
@@ -168,14 +165,12 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 inputedLine++;
                 inputedLine = removeSpacesUntilChar(inputedLine);
                 if (inputedLine[0] == ',') {
-                    printErrorMsg(MULTIPLE_COMMA_ERROR, lineNum);
                     newLine.error = MULTIPLE_COMMA_ERROR;
                     free(label);
                     free(cmd);
                     return newLine;
                 }
                 if (isEndOfString(inputedLine)) {
-                    printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
                     newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
                     free(label);
                     free(cmd);
@@ -201,7 +196,8 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         }
         if (strcmp(currentParm, ".string") == 0) {
             vars = (var *)malloc(sizeof(var));
-            currentParm = getStringUntilNonLetterChar(inputedLine);
+            currentParm = getStringUntilNonQuotationMarks(inputedLine);
+            inputedLine+= strlen(currentParm);
             if (currentParm == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(cmd);
@@ -209,9 +205,8 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 free(vars);
                 return newLine;
             }
-            inputedLine = removeUntilNonLetter(inputedLine);
+            // inputedLine = removeUntilNonLetter(inputedLine);
             if (currentParm[0] != '"') {
-                printErrorMsg(INVALID_PARAMETER_NOT_A_STRING_ERROR, lineNum);
                 newLine.error = INVALID_PARAMETER_NOT_A_STRING_ERROR;
                 free(cmd);
                 return newLine;
@@ -222,7 +217,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             currentParm++;
             while (*currentParm != '"') {
                 if (*currentParm == '\0') {
-                    printErrorMsg(INVALID_PARAMETER_NOT_A_STRING_ERROR, lineNum);
                     newLine.error = INVALID_PARAMETER_NOT_A_STRING_ERROR;
                     free(cmd);
                     return newLine;
@@ -234,7 +228,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
 
             inputedLine = removeSpacesUntilChar(inputedLine);
             if (!isEndOfString(inputedLine)) {
-                printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
                 newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
                 free(cmd);
                 return newLine;
@@ -246,7 +239,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         free(cmd);
         free(label);
         free(vars);
-        printErrorMsg(INVALID_COMMAND_NAME_ERROR, lineNum);
         newLine.error = INVALID_COMMAND_NAME_ERROR;
         return newLine;
     }
@@ -274,7 +266,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
 
     if (inputedLine[0] == ',') { /* Step 9: Check for illegal comma */
         newLine.error = ILLEGAL_COMMA_ERROR;
-        printErrorMsg(ILLEGAL_COMMA_ERROR, lineNum);
         newLine.label = label;
         newLine.cmd = cmd;
         return newLine;
@@ -320,7 +311,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     /* Step 14: Check for missing comma */
     if (inputedLine[0] != ',') {
         newLine.error = MISSING_COMMA_ERROR;
-        printErrorMsg(MISSING_COMMA_ERROR, lineNum);
         newLine.cmd = cmd;
         return newLine;
     }
@@ -332,7 +322,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     /* Step 16: Check if line is empty */
     if (isEndOfString(inputedLine)) {
         newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
-        printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
         newLine.cmd = cmd;
         return newLine;
     }
@@ -340,7 +329,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     /* Step 17: Check for multiple comma */
     if (inputedLine[0] == ',') {
         newLine.error = MULTIPLE_COMMA_ERROR;
-        printErrorMsg(MULTIPLE_COMMA_ERROR, lineNum);
         newLine.cmd = cmd;
         return newLine;
     }
@@ -379,7 +367,6 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     /* Step 21: Check if line is empty */
     if (!isEndOfString(inputedLine)) {
         newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
-        printErrorMsg(UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR, lineNum);
     }
 
     newLine.cmd = cmd;
@@ -408,6 +395,29 @@ char *getStringUntilNonLetterChar(char *str) {
         start++;
         str++;
     }
+    *start = '\0';
+    return string;
+}
+
+char *getStringUntilNonQuotationMarks(char *str) {
+    char *string = malloc(sizeof(char) * MAX_SIZE_OF_STRING);
+    char *start;
+
+    str++;
+
+    if (string == NULL) {
+        printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+        return NULL;
+    }
+    *string = '"';
+    start = string + 1;
+    while (*str != '\0' && *str != '"' && *str != '\n') {
+        *start = *str;
+        start++;
+        str++;
+    }
+    *start = '"';
+    start++;
     *start = '\0';
     return string;
 }

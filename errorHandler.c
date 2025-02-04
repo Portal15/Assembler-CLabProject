@@ -71,6 +71,9 @@ void printErrorMsg(const int errorType, const int lineNum){
         case INVALID_PARAMETER_NOT_A_STRING_ERROR:
             fprintf(stderr, "Error: Invalid parameter, not a string at line %d.\n", lineNum);
             break;
+        case LABEL_NAME_APPEAR_TWICE_ERROR:
+            fprintf(stderr, "Error: Label name appears twice at line %d.\n", lineNum);
+            break;
         default:
             fprintf(stderr, "Error: Unknown error.\n");
             break;

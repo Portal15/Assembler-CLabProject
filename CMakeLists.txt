@@ -8,7 +8,8 @@ add_executable(Maman14Project
         preProcessor.c
         errorHandler.c
         lineAnalyzer.c
-        lineValidation.c
+        Validations.c
+        objectTableAnalyzer.c
         utils.c
 )
 

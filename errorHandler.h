@@ -4,9 +4,9 @@
 #include <stdio.h>
 
 /* General Errors */
-#define MEMORY_ALLOCATION_ERROR 0
-#define FAILED_TO_OPEN_FILE_ERROR 1
-#define FAILED_TO_CREATE_FILE_ERROR 2
+#define MEMORY_ALLOCATION_ERROR 1
+#define FAILED_TO_OPEN_FILE_ERROR 2
+#define FAILED_TO_CREATE_FILE_ERROR 3
 
 /* PreProcessor Errors */
 #define INVALID_MACRO_ERROR 10
@@ -23,6 +23,10 @@
 #define INVALID_LABEL_NAME_ERROR 26
 #define INVALID_COMMAND_NAME_ERROR 27
 #define INVALID_PARAMETER_NOT_A_STRING_ERROR 28
+
+/* Object Table Errors */
+#define LABEL_NAME_APPEAR_TWICE_ERROR 30
+
 
 /* This function prints an error message to stderr.
  * errorType - the type of the error

@@ -6,9 +6,10 @@
 int isNumber(const char *str);
 int isLetter(const char *str);
 int isRegister(const char *str);
+int checkLineAnalyzerErrors(line *l);
 
-int checkValidation(line *l, char *forbiddenWords, char* vars){
-    if (l->error != 0){ /* The error was already act in the other file */
+int checkLineValidation(line *l, char *forbiddenWords){
+    if (checkLineAnalyzerErrors(l)){ /* The error was already act in the other file */
         return 0;
     }
 
@@ -78,6 +79,59 @@ int checkValidation(line *l, char *forbiddenWords, char* vars){
 
 }
 
+int checkLabelErrors(objectTable ot, line *l) {
+    if (l->label != NULL) {
+        objectTableCommands *temp = ot.commands;
+        if (temp != NULL && strcmp(temp->name, l->label) == 0) {
+            printErrorMsg(LABEL_NAME_APPEAR_TWICE_ERROR, l->lineNum);
+            return 0;
+        }
+        while(temp != NULL && temp->next != NULL) {
+            temp = temp->next;
+            if (strcmp(temp->name, l->label) == 0) {
+                printErrorMsg(LABEL_NAME_APPEAR_TWICE_ERROR, l->lineNum);
+                return 0;
+            }
+        }
+        /* Second Time */
+        objectTableData *temp1 = ot.data;
+        if (temp1 != NULL && strcmp(temp1->name, l->label) == 0) {
+            printErrorMsg(LABEL_NAME_APPEAR_TWICE_ERROR, l->lineNum);
+            return 0;
+        }
+        while(temp1 != NULL && temp1->next != NULL) {
+            temp1 = temp1->next;
+            if (strcmp(temp1->name, l->label) == 0) {
+                printErrorMsg(LABEL_NAME_APPEAR_TWICE_ERROR, l->lineNum);
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+int checkObjectTableErrors(objectTable ot) {
+    if (ot.error[0] == MEMORY_ALLOCATION_ERROR) {
+        printErrorMsg(MEMORY_ALLOCATION_ERROR, ot.error[1]);
+        return 0;
+    }
+    return 1;
+}
+
+int checkLineAnalyzerErrors(line *l) {
+    int error;
+    for (error = ILLEGAL_COMMA_ERROR; error <= INVALID_PARAMETER_NOT_A_STRING_ERROR; error++) {
+        if (l->error == error) {
+            printErrorMsg(error, l->lineNum);
+            return 1;
+        }
+    }
+    if (l->error == MEMORY_ALLOCATION_ERROR) {
+        printErrorMsg(MEMORY_ALLOCATION_ERROR, l->lineNum);
+    }
+    return 0;
+}
+
 int isNumber(const char *str){
     int dots = 0;
     int flag = 1;
@@ -86,7 +140,7 @@ int isNumber(const char *str){
         str++;
     }
 
-    if (*str == '-') {
+    if (*str == '-' || *str == '+') {
         str++;
     }
 
