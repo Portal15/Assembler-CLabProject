@@ -51,6 +51,7 @@ void addLineToObjectTable(line *l, objectTable *ot) {
             }
             newNode->name = l->label;
             newNode->value = *l->vars;
+            newNode->line = l->lineNum;
             newNode->next = NULL;
 
             if(ot->data == NULL) {
@@ -82,6 +83,7 @@ void addLineToObjectTable(line *l, objectTable *ot) {
             }
             newNode->name = l->label;
             newNode->value = *l->vars;
+            newNode->line = l->lineNum;
             newNode->next = NULL;
 
             if(ot->data == NULL) {

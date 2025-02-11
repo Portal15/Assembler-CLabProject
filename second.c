@@ -46,7 +46,7 @@ void SecondPass(ConvertedLines *list, objectTable *ob) {
             }
 	    /* TODO: error messege (how to find line???)*/
 	    else {
-		
+
 	    }
         }
         current = current->next;
