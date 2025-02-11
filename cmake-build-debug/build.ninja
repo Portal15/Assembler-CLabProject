@@ -91,6 +91,13 @@ build CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o: C_COMPILER__Maman14
   OBJECT_DIR = CMakeFiles/Maman14Project.dir
   OBJECT_FILE_DIR = CMakeFiles/Maman14Project.dir
 
+build CMakeFiles/Maman14Project.dir/second.c.o: C_COMPILER__Maman14Project_unscanned_Debug /Users/yonatanbenyehuda/Desktop/Computer$ Science/University/C/Course20465/CLabProject/second.c || cmake_object_order_depends_target_Maman14Project
+  DEP_FILE = CMakeFiles/Maman14Project.dir/second.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.2.sdk -fcolor-diagnostics
+  INCLUDES = -I"/Users/yonatanbenyehuda/Desktop/Computer Science/University/C/Course20465/CLabProject"
+  OBJECT_DIR = CMakeFiles/Maman14Project.dir
+  OBJECT_FILE_DIR = CMakeFiles/Maman14Project.dir
+
 build CMakeFiles/Maman14Project.dir/utils.c.o: C_COMPILER__Maman14Project_unscanned_Debug /Users/yonatanbenyehuda/Desktop/Computer$ Science/University/C/Course20465/CLabProject/utils.c || cmake_object_order_depends_target_Maman14Project
   DEP_FILE = CMakeFiles/Maman14Project.dir/utils.c.o.d
   FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.2.sdk -fcolor-diagnostics
@@ -106,7 +113,7 @@ build CMakeFiles/Maman14Project.dir/utils.c.o: C_COMPILER__Maman14Project_unscan
 #############################################
 # Link the executable Maman14Project
 
-build Maman14Project: C_EXECUTABLE_LINKER__Maman14Project_Debug CMakeFiles/Maman14Project.dir/main.c.o CMakeFiles/Maman14Project.dir/preProcessor.c.o CMakeFiles/Maman14Project.dir/errorHandler.c.o CMakeFiles/Maman14Project.dir/lineAnalyzer.c.o CMakeFiles/Maman14Project.dir/Validations.c.o CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o CMakeFiles/Maman14Project.dir/utils.c.o
+build Maman14Project: C_EXECUTABLE_LINKER__Maman14Project_Debug CMakeFiles/Maman14Project.dir/main.c.o CMakeFiles/Maman14Project.dir/preProcessor.c.o CMakeFiles/Maman14Project.dir/errorHandler.c.o CMakeFiles/Maman14Project.dir/lineAnalyzer.c.o CMakeFiles/Maman14Project.dir/Validations.c.o CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o CMakeFiles/Maman14Project.dir/second.c.o CMakeFiles/Maman14Project.dir/utils.c.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.2.sdk
   OBJECT_DIR = CMakeFiles/Maman14Project.dir
   POST_BUILD = :

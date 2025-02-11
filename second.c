@@ -17,21 +17,21 @@ int SecondPass(ConvertedLines *list, objectTable *ob) {
         if (current->data[0] == '!') {
             char *object = current->data + 1;
             int address = -1;
-	    char *charLineNum;
-	    int lineNum;
-	    objectTableEntry *entry;
-	    objectTableExtern *ext;
-	    objectTableData *data;
-	    while(current->data[0] != '!') {
-		current->data++;
-	    }
-	    current->data[0] = '\0';
-	    charLineNum = current->data + 1;
-	    lineNum = atoi(charLineNum);
+	        char *charLineNum;
+	        int lineNum;
+	        objectTableEntry *entry;
+	        objectTableExtern *ext;
+	        objectTableData *data;
+	        while(current->data[0] != '!') {
+		        current->data++;
+	        }
+	        current->data[0] = '\0';
+	        charLineNum = current->data + 1;
+	        lineNum = atoi(charLineNum);
             
             /* Search in entries */
             entry = ob->entries;
-            while (entry && (address == -1)) {
+            while (entry && address == -1) {
                 if (strcmp(entry->name, object) == 0) {
                     address = entry->address;
                 }
@@ -64,16 +64,16 @@ int SecondPass(ConvertedLines *list, objectTable *ob) {
             if (address != -1) {
                 free(current->data);
                 current->data = IntToHex(address);
-		if(current->data == NULL) {
-		    printErrorMsg(MEMORY_ALLOCATION_ERROR, lineNum);
-		    error = 1;
-		}
+		        if(current->data == NULL) {
+		            printErrorMsg(MEMORY_ALLOCATION_ERROR, lineNum);
+		            error = 1;
+		        }
             }
 	    /* If not found, print error messege */
-	    else {
-		printErrorMsg(LABEL_CALLED_BUT_WAS_NOT_DEFINED, lineNum);
-		error = 1;
-	    }
+            else {
+		        printErrorMsg(LABEL_CALLED_BUT_WAS_NOT_DEFINED, lineNum);
+                error = 1;
+	        }
         }
         current = current->next;
     }

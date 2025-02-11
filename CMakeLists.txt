@@ -10,6 +10,7 @@ add_executable(Maman14Project
         lineAnalyzer.c
         Validations.c
         objectTableAnalyzer.c
+        second.c
         utils.c
 )
 

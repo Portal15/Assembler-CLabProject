@@ -4,6 +4,7 @@
 #include "lineAnalyzer.h"
 #include "Validations.h"
 #include "objectTableAnalyzer.h"
+#include "second.h"
 #include "errorHandler.h"
 #include "preProcessor.h"
 
@@ -18,7 +19,7 @@ int main(void) {
     // free(mcros);
     // free(forbiddenWords);
     objectTable *ot = createObjectTable();
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 2; i++) {
         char* input = malloc(sizeof(char) * 100);
         fgets(input, 100, stdin);
         int isValid = 1;
@@ -40,5 +41,19 @@ int main(void) {
         free(input);
         free(l.cmd);
     }
+    ConvertedLines *list = malloc(sizeof(ConvertedLines));
+    char *data = malloc(sizeof(char) * 100);
+    strcpy(data, "12312321");
+    list->data = data;
+    ConvertedLines *next = malloc(sizeof(ConvertedLines));
+    list->next = next;
+    char *data1 = malloc(sizeof(char) * 100);
+    strcpy(data1, "!x");
+    next->data = data1;
+
+    if (SecondPass(list, ot)) {
+        printf("error");
+    }
+    free(list);
     return 0;
 }
