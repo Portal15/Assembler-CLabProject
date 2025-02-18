@@ -67,4 +67,5 @@ typedef struct objectTable {
     int error [2]; // [0] - line number, [1] - error type
 } objectTable;
 
+
 #endif //DATATYPES_H

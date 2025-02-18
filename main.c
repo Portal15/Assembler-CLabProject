@@ -48,11 +48,11 @@ int main(void) {
     ConvertedLines *next = malloc(sizeof(ConvertedLines));
     list->next = next;
     char *data1 = malloc(sizeof(char) * 100);
-    strcpy(data1, "!x");
+    strcpy(data1, "!xasda!232");
     next->data = data1;
 
     if (SecondPass(list, ot)) {
-        printf("error");
+        printf("error\n");
     }
     free(list);
     return 0;

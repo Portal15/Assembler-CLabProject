@@ -22,6 +22,7 @@ int SecondPass(ConvertedLines *list, objectTable *ob) {
 	        objectTableEntry *entry;
 	        objectTableExtern *ext;
 	        objectTableData *data;
+            current->data++;
 	        while(current->data[0] != '!') {
 		        current->data++;
 	        }
