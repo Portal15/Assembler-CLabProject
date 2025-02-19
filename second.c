@@ -10,8 +10,8 @@
  */
 char* IntToHex(int address);
 
-int SecondPass(ConvertedLines *list, objectTable *ob) {
-    ConvertedLines *current = list;
+int SecondPass(binaryConvertedLines *list, objectTable *ob) {
+    binaryConvertedLines *current = list;
     int error = 0;
     while (current) {
         if (current->data[0] == '!') {

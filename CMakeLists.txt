@@ -11,6 +11,7 @@ add_executable(Maman14Project
         Validations.c
         objectTableAnalyzer.c
         second.c
+        binaryConvertor.c
         utils.c
 )
 

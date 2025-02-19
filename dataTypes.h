@@ -67,5 +67,10 @@ typedef struct objectTable {
     int error [2]; // [0] - line number, [1] - error type
 } objectTable;
 
+typedef struct binaryConvertedLines{
+    char *data;
+    struct binaryConvertedLines *next;
+} binaryConvertedLines;
+
 
 #endif //DATATYPES_H

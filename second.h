@@ -8,13 +8,6 @@
 #define Digits_In_Hexa 16
 #define Bits_In_An_Hexa_Digit 4
 
-/* A place-holder for the linked list of the converted lines */
-typedef struct ConvertedLines{
-    char *data;
-    struct ConvertedLines *next;
-} ConvertedLines;
-
-
 /*
  * this function gets a pointer to the converted lines, and a pointer to the object table.
  * the function will go over the converted lined and it will check for lines with data that starts with !.
@@ -26,6 +19,6 @@ typedef struct ConvertedLines{
  * list - the linked list of the converted lines.
  * ob - the object table.
  */
-int SecondPass(ConvertedLines *list, objectTable *ob);
+int SecondPass(binaryConvertedLines *list, objectTable *ob);
 
 #endif

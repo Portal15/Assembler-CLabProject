@@ -3,6 +3,7 @@
 #include <string.h>
 #include "lineAnalyzer.h"
 #include "Validations.h"
+#include "binaryConvertor.h"
 #include "objectTableAnalyzer.h"
 #include "second.h"
 #include "errorHandler.h"
@@ -18,6 +19,8 @@ int main(void) {
     // printf("%s\n", mcros);
     // free(mcros);
     // free(forbiddenWords);
+
+    /* */
     objectTable *ot = createObjectTable();
     for (int i = 0; i < 2; i++) {
         char* input = malloc(sizeof(char) * 100);
@@ -38,14 +41,15 @@ int main(void) {
         } else {
             printf("Invalid\n");
         }
+        int hava = binaryConvertor(&l, 0);
         free(input);
         free(l.cmd);
     }
-    ConvertedLines *list = malloc(sizeof(ConvertedLines));
+    binaryConvertedLines *list = malloc(sizeof(binaryConvertedLines));
     char *data = malloc(sizeof(char) * 100);
     strcpy(data, "12312321");
     list->data = data;
-    ConvertedLines *next = malloc(sizeof(ConvertedLines));
+    binaryConvertedLines *next = malloc(sizeof(binaryConvertedLines));
     list->next = next;
     char *data1 = malloc(sizeof(char) * 100);
     strcpy(data1, "!xasda!232");
