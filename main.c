@@ -22,6 +22,9 @@ int main(void) {
 
     /* */
     objectTable *ot = createObjectTable();
+    binaryConvertedLines *list = malloc(sizeof(binaryConvertedLines));
+    int invisibleLineNum = 0;
+
     for (int i = 0; i < 2; i++) {
         char* input = malloc(sizeof(char) * 100);
         fgets(input, 100, stdin);
@@ -41,19 +44,13 @@ int main(void) {
         } else {
             printf("Invalid\n");
         }
-        int hava = binaryConvertor(&l, 0);
+        int hava = binaryConvertor(&l, &invisibleLineNum, list);
+        if (hava) {
+            printf("Error in binary convertor\n");
+        }
         free(input);
         free(l.cmd);
     }
-    binaryConvertedLines *list = malloc(sizeof(binaryConvertedLines));
-    char *data = malloc(sizeof(char) * 100);
-    strcpy(data, "12312321");
-    list->data = data;
-    binaryConvertedLines *next = malloc(sizeof(binaryConvertedLines));
-    list->next = next;
-    char *data1 = malloc(sizeof(char) * 100);
-    strcpy(data1, "!xasda!232");
-    next->data = data1;
 
     if (SecondPass(list, ot)) {
         printf("error\n");

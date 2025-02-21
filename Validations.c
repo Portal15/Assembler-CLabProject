@@ -20,10 +20,10 @@ int checkLineValidation(line *l, char *forbiddenWords){
 
     /* TODO: FIX THIS IF */
     if (l->cmd != NULL) {
-        if(l->cmd->name != NULL && isForbiddenWord(l->cmd->name, forbiddenWords)){
-            printErrorMsg(INVALID_COMMAND_NAME_ERROR, l->lineNum);
-            return 0;
-        }
+        // if(l->cmd->name != NULL && isForbiddenWord(l->cmd->name, forbiddenWords)){
+        //     printErrorMsg(INVALID_COMMAND_NAME_ERROR, l->lineNum);
+        //     return 0;
+        // }
 
         if(l->cmd->parm1Addressing0 != NULL && !isNumber(l->cmd->parm1Addressing0)){
             printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);

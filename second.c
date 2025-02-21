@@ -63,7 +63,6 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
 
             /* If found, replace with address */
             if (address != -1) {
-                free(current->data);
                 current->data = IntToHex(address);
 		        if(current->data == NULL) {
 		            printErrorMsg(MEMORY_ALLOCATION_ERROR, lineNum);
