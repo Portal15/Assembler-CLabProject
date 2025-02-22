@@ -1,5 +1,6 @@
 #include "binaryConvertor.h"
 #include "errorHandler.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
