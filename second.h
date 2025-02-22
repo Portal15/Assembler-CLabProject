@@ -7,6 +7,9 @@
 #define Size_Of_Address 6
 #define Digits_In_Hexa 16
 #define Bits_In_An_Hexa_Digit 4
+#define R 2^1
+#define E 2^0
+
 
 /*
  * this function gets a pointer to the converted lines, and a pointer to the object table.

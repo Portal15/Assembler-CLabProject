@@ -10,31 +10,72 @@
  */
 char* IntToHex(int address);
 
+
+/*
+ * this function gets a pointer to the start of 24 bits with the type of char and it is converting them into int.
+ * binary - the pointer to the first char (bit).
+ * the function return the int of the converted bits.
+ */
+int BinaryToInt(char *binary);
+
 int SecondPass(binaryConvertedLines *list, objectTable *ob) {
     binaryConvertedLines *current = list;
     int error = 0;
     while (current) {
         if (current->data[0] == '!') {
+
             char *object = current->data + 1;
             int address = -1;
-	        char *charLineNum;
-	        int lineNum;
-	        objectTableEntry *entry;
-	        objectTableExtern *ext;
-	        objectTableData *data;
-            current->data++;
-	        while(current->data[0] != '!') {
-		        current->data++;
-	        }
-	        current->data[0] = '\0';
-	        charLineNum = current->data + 1;
-	        lineNum = atoi(charLineNum);
+	    char *charLineNum;
+	    int lineNum;
+	    char *charEndLineNum;
+	    int endLineNum = -1;
+	    objectTableEntry *entry;
+	    objectTableExtern *ext;
+	    objectTableData *data;
+
+	    current->data++;
+
+	    while(current->data[0] != '!') {
+		current->data++;
+	    }
+
+	    current->data[0] = '\0';
+	    current->data++;
+	    charLineNum = current->data;
+
+	    while(current->data[0] != '!' && current->data[0] != '\0') {
+		current->data++;
+	    }
+
+	    if(current->data[0] == '!') {
+		current->data++;
+		charEndLineNum = current->data;
+	    	endLineNum = atoi(charEndLineNum);
+	    }
+
+	    lineNum = atoi(charLineNum);
             
+	    /* In case the addressing method is relative addressing */
+	    if(endLineNum != -1) {
+		address = lineNum - endLineNum;
+		if(address < 0) {
+		    address = ~address;
+		    address += 1;
+		    address <<= 11;
+		    address >>= 11;
+		}
+	    }
+
             /* Search in entries */
             entry = ob->entries;
-            while (entry && address == -1) {
+            while (entry && (address == -1)) {
                 if (strcmp(entry->name, object) == 0) {
-                    address = entry->address;
+		    if(endLineNum == -1) {
+			address = entry->address;
+		    }
+		    address >>= 3;
+		    address += R;
                 }
                 entry = entry->next;
             }
@@ -44,7 +85,10 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
                 ext = ob->externs;
                 while (ext && (address == -1)) {
                     if (strcmp(ext->name, object) == 0) {
-                        address = 1;
+			if(endLineNum == -1) {
+			    address = 0;
+			}
+			address += E;
                     }
                     ext = ext->next;
                 }
@@ -55,7 +99,11 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
                 data = ob->data;
                 while (data && (address == -1)) {
                     if (strcmp(data->name, object) == 0) {
-                        address = data->line;
+			if(endLineNum == -1) {
+			    address = data->line;
+			}
+		    	address >>= 3;
+		    	address += R;
                     }
                     data = data->next;
                 }
@@ -64,20 +112,36 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
             /* If found, replace with address */
             if (address != -1) {
                 current->data = IntToHex(address);
-		        if(current->data == NULL) {
-		            printErrorMsg(MEMORY_ALLOCATION_ERROR, lineNum);
-		            error = 1;
-		        }
+		if(current->data == NULL) {
+		    printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+		    error = 1;
+		}
             }
+
 	    /* If not found, print error messege */
-            else {
-		        printErrorMsg(LABEL_CALLED_BUT_WAS_NOT_DEFINED, lineNum);
-                error = 1;
-	        }
+	    else {
+		printErrorMsg(LABEL_CALLED_BUT_WAS_NOT_DEFINED, lineNum);
+		error = 1;
+	    }
         }
+	else {
+	    current->data = IntToHex(BinaryToInt(current->data));
+	    printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+	}
         current = current->next;
     }
     return error;
+}
+
+
+int BinaryToInt(char *binary) {
+    int result = 0;
+    while (*binary) {
+	result <<= 1;
+        result += *binary - '0';
+        binary++;
+    }
+    return result;
 }
 
 
