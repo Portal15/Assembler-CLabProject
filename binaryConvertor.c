@@ -120,6 +120,48 @@ int binaryConvertor(line *l_param, int *invisibleLineNum_param, binaryConvertedL
                 return 1;
             }
         }
+    }else {
+        if (l_param->vars->varType == 0) { /* for number */
+            char *numStr;
+            var *temp = l_param->vars;
+            while (temp != NULL && temp->digit != NULL) {
+                binaryCode = atoi(temp->digit);
+
+                numStr = (char *)malloc(MAX_NUM_LENGTH * sizeof(char));
+                if (numStr == NULL) {
+                    printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+                    return 1;
+                }
+
+                sprintf(numStr, "%d", binaryCode);
+                if (addLineToList(list_param, numStr)) {
+                    free(numStr);
+                    return 1;
+                }
+                temp = temp->next;
+            }
+        }
+        else if (l_param->vars->varType == 1) { /* for letter */
+            char *letterStr;
+            var *temp = l_param->vars;
+            while (temp != NULL && temp->letter != '\0') {
+                letterStr = (char *)malloc(2 * sizeof(char));
+                if (letterStr == NULL) {
+                    printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+                    return 1;
+                }
+
+                sprintf(letterStr, "%c", temp->letter);
+                if (addLineToList(list_param, letterStr)) {
+                    free(letterStr);
+                    return 1;
+                }
+                temp = temp->next;
+            }
+            if (addLineToList(list_param, "\0")) {
+                return 1;
+            }
+        }
     }
     return 0;
 }

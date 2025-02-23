@@ -23,111 +23,105 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
     int error = 0;
     while (current) {
         if (current->data[0] == '!') {
+	        char *object = current->data + 1;
+        	int address = -1;
+        	char *charLineNum;
+        	int lineNum;
+        	char *charEndLineNum;
+        	int endLineNum = -1;
+        	objectTableEntry *entry;
+        	objectTableExtern *ext;
+        	objectTableData *data;
 
-            char *object = current->data + 1;
-            int address = -1;
-	    char *charLineNum;
-	    int lineNum;
-	    char *charEndLineNum;
-	    int endLineNum = -1;
-	    objectTableEntry *entry;
-	    objectTableExtern *ext;
-	    objectTableData *data;
+        	current->data++;
+        	while(current->data[0] != '!') {
+        		current->data++;
+        	}
 
-	    current->data++;
+        	current->data[0] = '\0';
+        	current->data++;
+        	charLineNum = current->data;
 
-	    while(current->data[0] != '!') {
-		current->data++;
-	    }
+        	while(current->data[0] != '!' && current->data[0] != '\0') {
+        		current->data++;
+        	}
 
-	    current->data[0] = '\0';
-	    current->data++;
-	    charLineNum = current->data;
+        	if(current->data[0] == '!') {
+        		current->data++;
+        		charEndLineNum = current->data;
+        		endLineNum = atoi(charEndLineNum);
+        	}
 
-	    while(current->data[0] != '!' && current->data[0] != '\0') {
-		current->data++;
-	    }
+        	lineNum = atoi(charLineNum);
 
-	    if(current->data[0] == '!') {
-		current->data++;
-		charEndLineNum = current->data;
-	    	endLineNum = atoi(charEndLineNum);
-	    }
+        	/* In case the addressing method is relative addressing */
+        	if(endLineNum != -1) {
+        		address = lineNum - endLineNum;
+        		if(address < 0) {
+        			address = ~address;
+        			address += 1;
+        			address <<= 11;
+        			address >>= 11;
+        		}
+        	}
 
-	    lineNum = atoi(charLineNum);
-            
-	    /* In case the addressing method is relative addressing */
-	    if(endLineNum != -1) {
-		address = lineNum - endLineNum;
-		if(address < 0) {
-		    address = ~address;
-		    address += 1;
-		    address <<= 11;
-		    address >>= 11;
+        	/* Search in entries */
+        	entry = ob->entries;
+        	while (entry && (address == -1)) {
+        		if (strcmp(entry->name, object) == 0) {
+        			if(endLineNum == -1) {
+        				address = entry->address;
+        			}
+        			address >>= 3;
+        			address += R;
+        		}
+        		entry = entry->next;
+        	}
+
+        	/* Search in externs if not found in entries */
+        	if (address == -1) {
+        		ext = ob->externs;
+        		while (ext && (address == -1)) {
+        			if (strcmp(ext->name, object) == 0) {
+        				if(endLineNum == -1) {
+        					address = 0;
+        				}
+        				address |= E; /* TODO: Changed here from address += E to: address |= E */
+        			}
+        			ext = ext->next;
+        		}
+        	}
+
+        	/* Search in data if not found in externs */
+        	if (address == -1) {
+        		data = ob->data;
+        		while (data && (address == -1)) {
+        			if (strcmp(data->name, object) == 0) {
+        				if(endLineNum == -1) {
+        					address = data->line;
+        				}
+        				address <<= 3; /* TODO: Changed here from address =>> 3 to: address <<= 3 */
+        				address |= R; /* TODO: Changed here form address += R to: address |= R */
+        			}
+        			data = data->next;
+        		}
+        	}
+
+        	/* If found, replace with address */
+        	if (address != -1) {
+        		current->data = IntToHex(address);
+        		if(current->data == NULL) {
+        			printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+        			error = 1;
+        		}
+        	}else {/* If not found, print error messege */
+        		printErrorMsg(LABEL_CALLED_BUT_WAS_NOT_DEFINED, lineNum);
+        		error = 1;
+        	}
+        }else {
+			current->data = IntToHex(BinaryToInt(current->data));
+			/*printErrorMsg(MEMORY_ALLOCATION_ERROR, -1); TODO: I didnt get what you done here, please explain. every time that I run this code I got the error*/
 		}
-	    }
-
-            /* Search in entries */
-            entry = ob->entries;
-            while (entry && (address == -1)) {
-                if (strcmp(entry->name, object) == 0) {
-		    if(endLineNum == -1) {
-			address = entry->address;
-		    }
-		    address >>= 3;
-		    address += R;
-                }
-                entry = entry->next;
-            }
-            
-            /* Search in externs if not found in entries */
-            if (address == -1) {
-                ext = ob->externs;
-                while (ext && (address == -1)) {
-                    if (strcmp(ext->name, object) == 0) {
-			if(endLineNum == -1) {
-			    address = 0;
-			}
-			address += E;
-                    }
-                    ext = ext->next;
-                }
-            }
-            
-	    /* Search in data if not found in externs */
-            if (address == -1) {
-                data = ob->data;
-                while (data && (address == -1)) {
-                    if (strcmp(data->name, object) == 0) {
-			if(endLineNum == -1) {
-			    address = data->line;
-			}
-		    	address >>= 3;
-		    	address += R;
-                    }
-                    data = data->next;
-                }
-            }
-
-            /* If found, replace with address */
-            if (address != -1) {
-                current->data = IntToHex(address);
-		if(current->data == NULL) {
-		    printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
-		    error = 1;
-		}
-            }
-
-	    /* If not found, print error messege */
-	    else {
-		printErrorMsg(LABEL_CALLED_BUT_WAS_NOT_DEFINED, lineNum);
-		error = 1;
-	    }
-        }
-	else {
-	    current->data = IntToHex(BinaryToInt(current->data));
-	    printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
-	}
         current = current->next;
     }
     return error;
