@@ -72,8 +72,8 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
         			if(endLineNum == -1) {
         				address = entry->address;
         			}
-        			address >>= 3;
-        			address += R;
+        			address <<= 3;
+        			address |= R;
         		}
         		entry = entry->next;
         	}
@@ -86,7 +86,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
         				if(endLineNum == -1) {
         					address = 0;
         				}
-        				address |= E; /* TODO: Changed here from address += E to: address |= E */
+        				address |= E;
         			}
         			ext = ext->next;
         		}
@@ -100,8 +100,8 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
         				if(endLineNum == -1) {
         					address = data->line;
         				}
-        				address <<= 3; /* TODO: Changed here from address =>> 3 to: address <<= 3 */
-        				address |= R; /* TODO: Changed here form address += R to: address |= R */
+        				address <<= 3;
+        				address |= R;
         			}
         			data = data->next;
         		}
@@ -120,7 +120,10 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
         	}
         }else {
 			current->data = IntToHex(BinaryToInt(current->data));
-			/*printErrorMsg(MEMORY_ALLOCATION_ERROR, -1); TODO: I didnt get what you done here, please explain. every time that I run this code I got the error*/
+			if(current->data == NULL) {
+				printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+				error = 1;
+			}		
 		}
         current = current->next;
     }
