@@ -1,12 +1,12 @@
-#include "errorHandler.h"
-#include "lineAnalyzer.h"
-#include "utils.h"
-#include "dataTypes.h"
+#include "headerFiles/errorHandler.h"
+#include "headerFiles/lineAnalyzer.h"
+#include "headerFiles/utils.h"
+#include "headerFiles/dataTypes.h"
 
-#include "errorHandler.h"
-#include "lineAnalyzer.h"
-#include "utils.h"
-#include "dataTypes.h"
+#include "headerFiles/errorHandler.h"
+#include "headerFiles/lineAnalyzer.h"
+#include "headerFiles/utils.h"
+#include "headerFiles/dataTypes.h"
 
 void addLineToObjectTable(line *l, objectTable *ot) {
     if(l->label != NULL) {

@@ -1,7 +1,7 @@
-#include "errorHandler.h"
-#include "utils.h"
-#include "second.h"
-#include "dataTypes.h"
+#include "headerFiles/errorHandler.h"
+#include "headerFiles/utils.h"
+#include "headerFiles/second.h"
+#include "headerFiles/dataTypes.h"
 
 /*
  * this function gets an address (that we are assuming that is 24 bits long) and converting it to hexadecimal.

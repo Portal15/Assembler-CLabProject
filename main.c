@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "lineAnalyzer.h"
-#include "Validations.h"
-#include "binaryConvertor.h"
-#include "objectTableAnalyzer.h"
-#include "second.h"
-#include "errorHandler.h"
-#include "preProcessor.h"
+#include "headerFiles/lineAnalyzer.h"
+#include "headerFiles/Validations.h"
+#include "headerFiles/binaryConvertor.h"
+#include "headerFiles/objectTableAnalyzer.h"
+#include "headerFiles/second.h"
+#include "headerFiles/errorHandler.h"
+#include "headerFiles/preProcessor.h"
 
 int main(void) {
     // char *preForbiddenWords = "jmp\nmov";

@@ -1,6 +1,6 @@
-#include "binaryConvertor.h"
-#include "errorHandler.h"
-#include "utils.h"
+#include "headerFiles/binaryConvertor.h"
+#include "headerFiles/errorHandler.h"
+#include "headerFiles/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,18 +21,18 @@ int getRegistersCode(const line *l);
 int addLineToList(binaryConvertedLines *list, char *data);
 
 /* Main binary converter function */
-int binaryConvertor(line *l_param, int *invisibleLineNum_param, binaryConvertedLines *list_param) {
+int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) {
     int binaryCode = 0;
     char tempBuffer[MAX_LINE_LENGTH];
     char *str;
 
 
-    if (isCommand(l_param)) {
+    if (isCommand(l)) {
         char *binaryStr;
 
-        binaryCode = getOpcodeAndFunctCode(l_param);
-        binaryCode |= getAddressingCode(l_param, invisibleLineNum_param);
-        binaryCode |= getRegistersCode(l_param);
+        binaryCode = getOpcodeAndFunctCode(l);
+        binaryCode |= getAddressingCode(l, invisibleLineNum);
+        binaryCode |= getRegistersCode(l);
         binaryCode |= A;
 
         binaryStr = (char *)malloc(MAX_NUM_LENGTH * sizeof(char));
@@ -42,15 +42,15 @@ int binaryConvertor(line *l_param, int *invisibleLineNum_param, binaryConvertedL
         }
 
         sprintf(binaryStr, "%d", binaryCode);
-        if (addLineToList(list_param, binaryStr)) {
+        if (addLineToList(list, binaryStr)) {
             free(binaryStr);
             return 1;
         }
 
         /* Handle parameter 1 */
-        if (l_param->cmd->parm1Addressing0 != NULL) {
+        if (l->cmd->parm1Addressing0 != NULL) {
             char *numStr;
-            binaryCode = atoi(l_param->cmd->parm1Addressing0);
+            binaryCode = atoi(l->cmd->parm1Addressing0);
 
             numStr = (char *)malloc(MAX_NUM_LENGTH * sizeof(char));
             if (numStr == NULL) {
@@ -59,35 +59,35 @@ int binaryConvertor(line *l_param, int *invisibleLineNum_param, binaryConvertedL
             }
 
             sprintf(numStr, "%d", binaryCode);
-            if (addLineToList(list_param, numStr)) {
+            if (addLineToList(list, numStr)) {
                 free(numStr);
                 return 1;
             }
         }
-        else if (l_param->cmd->parm1Addressing1 != NULL) {
-            sprintf(tempBuffer, "!%s!%d", l_param->cmd->parm1Addressing1, l_param->lineNum);
+        else if (l->cmd->parm1Addressing1 != NULL) {
+            sprintf(tempBuffer, "!%s!%d", l->cmd->parm1Addressing1, l->lineNum);
             str = strdup(tempBuffer);
-            if (str == NULL || addLineToList(list_param, str)) {
+            if (str == NULL || addLineToList(list, str)) {
                 free(str);
                 return 1;
             }
         }
-        else if (l_param->cmd->parm1Addressing2 != NULL) {
+        else if (l->cmd->parm1Addressing2 != NULL) {
             sprintf(tempBuffer, "!%s!%d!%d",
-                l_param->cmd->parm1Addressing2,
-                l_param->lineNum,
-                *invisibleLineNum_param);
+                l->cmd->parm1Addressing2,
+                l->lineNum,
+                *invisibleLineNum);
             str = strdup(tempBuffer);
-            if (str == NULL || addLineToList(list_param, str)) {
+            if (str == NULL || addLineToList(list, str)) {
                 free(str);
                 return 1;
             }
         }
 
         /* Handle parameter 2 */
-        if (l_param->cmd->parm2Addressing0 != NULL) {
+        if (l->cmd->parm2Addressing0 != NULL) {
             char *numStr;
-            binaryCode = atoi(l_param->cmd->parm2Addressing0);
+            binaryCode = atoi(l->cmd->parm2Addressing0);
 
             numStr = (char *)malloc(MAX_NUM_LENGTH * sizeof(char));
             if (numStr == NULL) {
@@ -96,34 +96,34 @@ int binaryConvertor(line *l_param, int *invisibleLineNum_param, binaryConvertedL
             }
 
             sprintf(numStr, "%d", binaryCode);
-            if (addLineToList(list_param, numStr)) {
+            if (addLineToList(list, numStr)) {
                 free(numStr);
                 return 1;
             }
         }
-        else if (l_param->cmd->parm2Addressing1 != NULL) {
-            sprintf(tempBuffer, "!%s!%d", l_param->cmd->parm2Addressing1, l_param->lineNum);
+        else if (l->cmd->parm2Addressing1 != NULL) {
+            sprintf(tempBuffer, "!%s!%d", l->cmd->parm2Addressing1, l->lineNum);
             str = strdup(tempBuffer);
-            if (str == NULL || addLineToList(list_param, str)) {
+            if (str == NULL || addLineToList(list, str)) {
                 free(str);
                 return 1;
             }
         }
-        else if (l_param->cmd->parm2Addressing2 != NULL) {
+        else if (l->cmd->parm2Addressing2 != NULL) {
             sprintf(tempBuffer, "!%s!%d!%d",
-                l_param->cmd->parm2Addressing2,
-                l_param->lineNum,
-                *invisibleLineNum_param);
+                l->cmd->parm2Addressing2,
+                l->lineNum,
+                *invisibleLineNum);
             str = strdup(tempBuffer);
-            if (str == NULL || addLineToList(list_param, str)) {
+            if (str == NULL || addLineToList(list, str)) {
                 free(str);
                 return 1;
             }
         }
     }else {
-        if (l_param->vars->varType == 0) { /* for number */
+        if (l->vars->varType == 0) { /* for number */
             char *numStr;
-            var *temp = l_param->vars;
+            var *temp = l->vars;
             while (temp != NULL && temp->digit != NULL) {
                 binaryCode = atoi(temp->digit);
 
@@ -134,16 +134,16 @@ int binaryConvertor(line *l_param, int *invisibleLineNum_param, binaryConvertedL
                 }
 
                 sprintf(numStr, "%d", binaryCode);
-                if (addLineToList(list_param, numStr)) {
+                if (addLineToList(list, numStr)) {
                     free(numStr);
                     return 1;
                 }
                 temp = temp->next;
             }
         }
-        else if (l_param->vars->varType == 1) { /* for letter */
+        else if (l->vars->varType == 1) { /* for letter */
             char *letterStr;
-            var *temp = l_param->vars;
+            var *temp = l->vars;
             while (temp != NULL && temp->letter != '\0') {
                 letterStr = (char *)malloc(2 * sizeof(char));
                 if (letterStr == NULL) {
@@ -152,13 +152,13 @@ int binaryConvertor(line *l_param, int *invisibleLineNum_param, binaryConvertedL
                 }
 
                 sprintf(letterStr, "%c", temp->letter);
-                if (addLineToList(list_param, letterStr)) {
+                if (addLineToList(list, letterStr)) {
                     free(letterStr);
                     return 1;
                 }
                 temp = temp->next;
             }
-            if (addLineToList(list_param, "\0")) {
+            if (addLineToList(list, "\0")) {
                 return 1;
             }
         }

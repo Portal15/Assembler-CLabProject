@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "lineAnalyzer.h"
-#include "errorHandler.h"
-#include "utils.h"
+#include "headerFiles/lineAnalyzer.h"
+#include "headerFiles/errorHandler.h"
+#include "headerFiles/utils.h"
 
 char *removeSpacesUntilChar(char *line);
 char *getStringUntilNonLetterChar(char *str);

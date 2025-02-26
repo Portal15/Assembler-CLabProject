@@ -1,7 +1,7 @@
-#include "preProcessor.h"
-#include "errorHandler.h"
-#include "lineAnalyzer.h"
-#include "utils.h"
+#include "headerFiles/preProcessor.h"
+#include "headerFiles/errorHandler.h"
+#include "headerFiles/lineAnalyzer.h"
+#include "headerFiles/utils.h"
 
 /* This struct represents a mcro.
  * mcroName - the name of the mcro

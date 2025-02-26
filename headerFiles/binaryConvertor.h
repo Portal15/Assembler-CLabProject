@@ -4,6 +4,6 @@
 #include "dataTypes.h"
 
 
-int binaryConvertor(line *l_param, int *invisibleLineNum_param, binaryConvertedLines *list_param);
+int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list);
 
 #endif //BINARYCONVERTOR_H
