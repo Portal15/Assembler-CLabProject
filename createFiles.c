@@ -38,7 +38,7 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob)
 
     /* returning error if the file couldnt be created */
     if (obFile == NULL) {
-	printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+	    printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
         return;
     }
 
@@ -64,7 +64,7 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob)
 
         /* returning error if the file couldnt be created */
         if (obFile == NULL) {
-	    printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+	        printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
             return;
         }
 
@@ -87,7 +87,7 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob)
 
         /* returning error if the file couldnt be created */
         if (obFile == NULL) {
-	    printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+	        printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
             return;
         }
 
@@ -106,24 +106,23 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob)
 void CreateFileName(char* file, char* obFile, int fileType)
 {
     char* dot;
-   
     /* copying the file name into a buffer and changing the copies' ending to .ob */
     strcpy(obFile, file);
     dot = strrchr(obFile, '.');
     if(fileType == 0) {
-	*++dot = 'o';
-	*++dot = 'b';
-	*++dot = '\0';
+	    *++dot = 'o';
+	    *++dot = 'b';
+	    *++dot = '\0';
     }
     if(fileType == 1) {
-	*++dot = 'e';
-	*++dot = 'n';
-	*++dot = 't';
-	*++dot = '\0';
+	    *++dot = 'e';
+	    *++dot = 'n';
+	    *++dot = 't';
+	    *++dot = '\0';
     } else {
-	*++dot = 'e';
-	*++dot = 'x';
-	*++dot = 't';
-	*++dot = '\0';
+	    *++dot = 'e';
+	    *++dot = 'x';
+	    *++dot = 't';
+	    *++dot = '\0';
     }
 }

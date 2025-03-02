@@ -12,6 +12,7 @@ add_executable(Maman14Project
         objectTableAnalyzer.c
         second.c
         binaryConvertor.c
+        createFiles.c
         utils.c
 )
 

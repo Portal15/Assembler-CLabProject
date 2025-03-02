@@ -6,6 +6,7 @@
 #include "headerFiles/binaryConvertor.h"
 #include "headerFiles/objectTableAnalyzer.h"
 #include "headerFiles/second.h"
+#include "headerFiles/createFiles.h"
 #include "headerFiles/errorHandler.h"
 #include "headerFiles/preProcessor.h"
 
@@ -25,7 +26,7 @@ int main(void) {
     binaryConvertedLines *list = malloc(sizeof(binaryConvertedLines));
     int invisibleLineNum = 0;
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
         char* input = malloc(sizeof(char) * 100);
         fgets(input, 100, stdin);
         int isValid = 1;
@@ -55,6 +56,7 @@ int main(void) {
     if (SecondPass(list, ot)) {
         printf("error\n");
     }
+    CreateFiles(list, "bla.as", ot);
     free(list);
     return 0;
 }
