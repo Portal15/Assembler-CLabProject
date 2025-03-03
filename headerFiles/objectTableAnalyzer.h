@@ -11,4 +11,9 @@ void addLineToObjectTable(line *l, objectTable *ot);
 
 objectTable* createObjectTable();
 
+void fillInvisibleLineNum(objectTable* ot, int* invisibleLineNum, int lineNum);
+
+int checkForDoubles(objectTable* ot);
+
+
 #endif //OBJECTTABLEANALYZER_H

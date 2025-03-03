@@ -24,9 +24,10 @@ int main(void) {
     /* */
     objectTable *ot = createObjectTable();
     binaryConvertedLines *list = malloc(sizeof(binaryConvertedLines));
-    int invisibleLineNum = 0;
+    int invisibleLineNum = 100;
+    int tempInvisibleLineNum = invisibleLineNum;
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 100; i < 121; i++) {
         char* input = malloc(sizeof(char) * 100);
         fgets(input, 100, stdin);
         int isValid = 1;
@@ -49,14 +50,20 @@ int main(void) {
         if (hava) {
             printf("Error in binary convertor\n");
         }
+        fillInvisibleLineNum(ot, &tempInvisibleLineNum, i);
         free(input);
         free(l.cmd);
+        tempInvisibleLineNum = invisibleLineNum;
+    }
+    if (checkForDoubles(ot)) {
+        printf("error at doubles\n");
     }
 
     if (SecondPass(list, ot)) {
         printf("error\n");
     }
+
     CreateFiles(list, "bla.as", ot);
-    free(list);
+    // free(list);
     return 0;
 }

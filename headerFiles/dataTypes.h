@@ -37,6 +37,7 @@ typedef struct line{
 typedef struct objectTableCommands {
     char *name;
     int line;
+    int address;
     struct objectTableCommands *next;
 } objectTableCommands;
 
@@ -44,17 +45,20 @@ typedef struct objectTableData {
     char *name;
     var value;
     int line;
+    int address;
     struct objectTableData *next;
 } objectTableData;
 
 typedef struct objectTableExtern {
     char *name;
     int line;
+    int address;
     struct objectTableExtern *next;
 } objectTableExtern;
 
 typedef struct objectTableEntry {
     char *name;
+    int line;
     int address;
     struct objectTableEntry *next;
 } objectTableEntry;

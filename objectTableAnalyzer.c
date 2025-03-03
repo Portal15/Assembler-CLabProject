@@ -104,7 +104,8 @@ void addLineToObjectTable(line *l, objectTable *ot) {
         }
 
         /* Handle externals */
-    } else if(l->vars != NULL && l->vars->varType == 2) {
+    }
+    if(l->vars != NULL && l->vars->varType == 2) {
         objectTableExtern *newNode = (objectTableExtern *)malloc(sizeof(objectTableExtern));
         if(newNode == NULL) {
             ot->error[0] = l->lineNum;
@@ -119,7 +120,7 @@ void addLineToObjectTable(line *l, objectTable *ot) {
             ot->externs = newNode;
         } else {
             objectTableExtern *temp = ot->externs;
-            if (strcmp(temp->name, l->label) == 0) {
+            if (l->label != NULL && strcmp(temp->name, l->label) == 0) {
                 ot->error[0] = l->lineNum;
                 ot->error[1] = LABEL_NAME_APPEAR_TWICE_ERROR;
             }
@@ -135,7 +136,7 @@ void addLineToObjectTable(line *l, objectTable *ot) {
     }
 
     /* Handle entries */
-    else if(l->vars != NULL && l->vars->varType == 3) {
+    if(l->vars != NULL && l->vars->varType == 3) {
         objectTableEntry *newNode = (objectTableEntry *)malloc(sizeof(objectTableEntry));
         if(newNode == NULL) {
             ot->error[0] = l->lineNum;
@@ -143,14 +144,14 @@ void addLineToObjectTable(line *l, objectTable *ot) {
             return;
         }
         newNode->name = l->vars->label;
-        newNode->address = l->lineNum;
+        newNode->line = l->lineNum;
         newNode->next = NULL;
 
         if(ot->entries == NULL) {
             ot->entries = newNode;
         } else {
             objectTableEntry *temp = ot->entries;
-            if (strcmp(temp->name, l->label) == 0) {
+            if (l->label != NULL && strcmp(temp->name, l->label) == 0) {
                 ot->error[0] = l->lineNum;
                 ot->error[1] = LABEL_NAME_APPEAR_TWICE_ERROR;
             }
@@ -175,4 +176,82 @@ objectTable* createObjectTable() {
         ot->entries = NULL;
     }
     return ot;
+}
+
+void fillInvisibleLineNum(objectTable* ot, int* invisibleLineNum, int lineNum) {
+    objectTableCommands* command = ot->commands;
+    objectTableData* data = ot->data;
+    objectTableExtern* ext = ot->externs;
+    objectTableEntry* entry = ot->entries;
+    while (entry != NULL) {
+        if (entry->line == lineNum) {
+            entry->address = *invisibleLineNum;
+        }
+        entry = entry->next;
+    }
+    while (ext != NULL) {
+        if (ext->line == lineNum) {
+            ext->address = *invisibleLineNum;
+        }
+        ext = ext->next;
+    }
+    while (data != NULL) {
+        if (data->line == lineNum) {
+            data->address = *invisibleLineNum;
+        }
+        data = data->next;
+    }
+    while (command != NULL) {
+        if (command->line == lineNum) {
+            command->address = *invisibleLineNum;
+        }
+        command = command->next;
+    }
+}
+
+int checkForDoubles(objectTable* ot) {
+    objectTableEntry* entry = ot->entries;
+    objectTableExtern* ext = ot->externs;
+    objectTableData* data = ot->data;
+    objectTableCommands* command = ot->commands;
+    while (entry != NULL) {
+        while (data != NULL) {
+            if (data->name != NULL && entry->name != NULL && strcmp(entry->name, data->name) == 0) {
+                entry->address = data->address;
+            }
+            data = data->next;
+        }
+        data = ot->data;
+        while (command != NULL) {
+            if (command->name != NULL && entry->name != NULL && strcmp(entry->name, command->name) == 0) {
+                entry->address = command->address;
+            }
+            command = command->next;
+        }
+        command = ot->commands;
+
+        entry = entry->next;
+    }
+    while (ext != NULL) {
+        while (data != NULL) {
+            if (data->name != NULL && ext->name != NULL && strcmp(ext->name, data->name) == 0) {
+                printErrorMsg(LABEL_NAME_APPEAR_TWICE_ERROR, data->line);
+                return 1;
+            }
+            data = data->next;
+        }
+        data = ot->data;
+        while (command != NULL) {
+            if (command->name != NULL && ext->name != NULL && strcmp(ext->name, command->name) == 0) {
+                printErrorMsg(LABEL_NAME_APPEAR_TWICE_ERROR, command->line);
+                return 1;
+            }
+            command = command->next;
+        }
+        command = ot->commands;
+
+        ext = ext->next;
+    }
+    return 0;
+
 }

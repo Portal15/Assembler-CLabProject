@@ -27,6 +27,7 @@
 /* Object Table Errors */
 #define LABEL_NAME_APPEAR_TWICE_ERROR 30
 #define LABEL_CALLED_BUT_WAS_NOT_DEFINED 31
+#define EXTERN_LABEL_DECLARED 32
 
 
 /* This function prints an error message to stderr.

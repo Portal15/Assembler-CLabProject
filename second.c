@@ -32,6 +32,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
         	objectTableEntry *entry;
         	objectTableExtern *ext;
         	objectTableData *data;
+        	objectTableCommands *command;
 
         	current->data++;
         	while(current->data[0] != '!') {
@@ -65,12 +66,25 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
         		}
         	}
 
+        	/* Search in commands */
+        	command = ob->commands;
+        	while (command && (address == -1)) {
+        		if (strcmp(command->name, object) == 0) {
+        			if(endLineNum == -1) {
+        				address = command->line;
+        			}
+        			address <<= 3;
+        			address |= R;
+        		}
+        		command = command->next;
+        	}
+
         	/* Search in entries */
         	entry = ob->entries;
         	while (entry && (address == -1)) {
         		if (strcmp(entry->name, object) == 0) {
         			if(endLineNum == -1) {
-        				address = entry->address;
+        				address = entry->line;
         			}
         			address <<= 3;
         			address |= R;

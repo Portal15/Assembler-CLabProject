@@ -74,9 +74,11 @@ void printErrorMsg(const int errorType, const int lineNum){
         case LABEL_NAME_APPEAR_TWICE_ERROR:
             fprintf(stderr, "Error: Label name appears twice at line %d.\n", lineNum);
             break;
-	case LABEL_CALLED_BUT_WAS_NOT_DEFINED:
+	    case LABEL_CALLED_BUT_WAS_NOT_DEFINED:
             fprintf(stderr, "Error: Label was called but wasn't defined at line %d.\n", lineNum);
             break;
+        case EXTERN_LABEL_DECLARED:
+            fprintf(stderr, "Error: External label declared again at line %d.\n", lineNum);
         default:
             fprintf(stderr, "Error: Unknown error.\n");
             break;
