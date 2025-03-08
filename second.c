@@ -101,12 +101,14 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         					address = 0;
         				}
         				address |= E;
-					if(!(externs->name)) {
+					if(!externs && !(externs->name)) {
+						externs->name = object;
+						externs = externs->next;
+					}else {
 						externsAppearance *newNode = (externsAppearance *)malloc(sizeof(externsAppearance));
 						newNode->name = object;
 						externs->next = newNode;
-					}else {
-						externs->name = object;
+						externs = externs->next;
 					}
         			}
         			ext = ext->next;

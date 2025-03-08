@@ -26,6 +26,7 @@ int main(void) {
     binaryConvertedLines *list = malloc(sizeof(binaryConvertedLines));
     int invisibleLineNum = 100;
     int tempInvisibleLineNum = invisibleLineNum;
+    int dataWithNoLabel = 0;
 
     for (int i = 100; i < 121; i++) {
         char* input = malloc(sizeof(char) * 100);
@@ -50,6 +51,10 @@ int main(void) {
         if (hava) {
             printf("Error in binary convertor\n");
         }
+        if (l.label == NULL && l.vars != NULL && (l.vars->varType == 0 || l.vars->varType == 1)) {
+            dataWithNoLabel += 1;
+        }
+
         fillInvisibleLineNum(ot, &tempInvisibleLineNum, i);
         free(input);
         free(l.cmd);
@@ -58,12 +63,12 @@ int main(void) {
     if (checkForDoubles(ot)) {
         printf("error at doubles\n");
     }
-
-    if (SecondPass(list, ot)) {
+    externsAppearance *externs = malloc(sizeof(externsAppearance));
+    if (SecondPass(list, ot, externs)) {
         printf("error\n");
     }
 
-    CreateFiles(list, "bla.as", ot);
+    CreateFiles(list, "bla.as", ot, externs);
     // free(list);
     return 0;
 }

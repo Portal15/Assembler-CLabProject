@@ -122,7 +122,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
         }
         (*invisibleLineNum)++;
     }else {
-        if (l->vars->varType == 0) { /* for number */
+        if (l->vars != NULL && l->vars->varType == 0) { /* for number */
             char *numStr;
             var *temp = l->vars;
             while (temp != NULL && temp->digit != NULL) {
@@ -143,7 +143,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
                 (*invisibleLineNum)++;
             }
         }
-        else if (l->vars->varType == 1) { /* for letter */
+        else if (l->vars != NULL && l->vars->varType == 1) { /* for letter */
             char *letterStr;
             var *temp = l->vars;
             while (temp != NULL && temp->letter != '\0') {

@@ -114,11 +114,10 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, extern
             printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
             return;
         }
-
+		externs = externs->next;
         while (externs && current) {
 	    if(current->data[0] == '0' && current->data[1] == '0' && current->data[2] == '0' && current->data[3] == '0' && current->data[4] == '0' && current->data[5] == '1') {
         	fprintf(obFile, "%s %07d\n", externs->name, invisLineCounter);
-        	free(externs->name);
         	tempExtern = externs;
         	externs = externs->next;
         	free(tempExtern);
@@ -130,6 +129,11 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, extern
         fclose(obFile);
     }
 
+	/* Creating the name of the file with an ending of .ob */
+	CreateFileName(file, obFileName, 0);
+
+	/* Creating the .ob file */
+	obFile = fopen(obFileName, "w");
 
     /* Writing data */
     while (list) {
