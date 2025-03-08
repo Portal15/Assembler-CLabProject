@@ -24,6 +24,7 @@ int checkLineValidation(line *l, char *forbiddenWords){
     if (l->cmd != NULL) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         // if (inCommandCheck(l->cmd, forbiddenWords) == 0) {
         //     printErrorMsg(INVALID_COMMAND_ERROR, l->lineNum);
         //     return 0;
@@ -31,11 +32,16 @@ int checkLineValidation(line *l, char *forbiddenWords){
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         if (inCommandCheck(l->cmd, forbiddenWords) == 0) {
             printErrorMsg(INVALID_COMMAND_ERROR, l->lineNum);
             return 0;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
