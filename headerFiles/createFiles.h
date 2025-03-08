@@ -16,6 +16,5 @@
  * the function assumes that the file name is fixed since it wouldnt have been called otherwise.
  * the function assumes that the given file name isnt longer that 256 characters.
  */
-void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob);
-
+void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, externsAppearance *externs);
 #endif

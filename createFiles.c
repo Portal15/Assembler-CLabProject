@@ -18,53 +18,140 @@
 void CreateFileName(char* file, char* obFile, int fileType);
 
 
-void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob)
-{
+void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, externsAppearance *externs) {
     FILE *obFile;
     int counter = 100;
+    int invisLineCounter = 100;
     char obFileName[256];
     objectTableEntry *entry = ob->entries;
     objectTableEntry *tempEntry;
     objectTableExtern *ext = ob->externs;
     objectTableExtern *tempExt;
+    externsAppearance *tempExtern;
     binaryConvertedLines *current = list;
-    binaryConvertedLines *temp;
+    binaryConvertedLines *templine;
+    objectTableData *data = ob->data;
+    var *value = (data ? &(data->value) : NULL);
+    int dataLines = 0;
+    int totalLines = 0;
+    int codeLines;
 
-    /* creating the name of the file with an ending of .ob */
+    /* Creating the name of the file with an ending of .ob */
     CreateFileName(file, obFileName, 0);
 
-    /* creating the .ob file */
+    /* Creating the .ob file */
     obFile = fopen(obFileName, "w");
 
-    /* returning error if the file couldnt be created */
+    /* Return error if the file couldn't be created */
     if (obFile == NULL) {
-	    printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+        printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+    
+        /* Free dynamically allocated memory before returning */
+        while (list) {
+            templine = list;
+            if(list->data) free(list->data);
+            list = list->next;
+            free(templine);
+        }
+
+        while (entry) {
+            tempEntry = entry;
+            if(entry->name) free(entry->name);
+            entry = entry->next;
+            free(tempEntry);
+        }
+
+        while (ext) {
+            tempExt = ext;
+            if(ext->name) free(ext->name);
+            ext = ext->next;
+            free(tempExt);
+        }
+
+	while (ob->data) {
+	    objectTableData *tempData = ob->data;
+    
+	    if (tempData->name) free(tempData->name);
+
+	    ob->data = ob->data->next;
+	    free(tempData);
+	}
+
+
         return;
     }
 
-    /* writing in the file the number of line next to every line of code and data translated to machine language */
-    while (current) {
-        fprintf(obFile, "%07d %s\n", counter, current->data);
+    /* Count data lines */
+    while (data) {
+	if(!data) break;
+        value = data ? &(data->value) : NULL;
+        while (value) {
+	    if(!value) break;
+            dataLines++;
+            value = value->next;
+        }
+        data = data->next;
+    }
+
+    /* Count total lines */
+    templine = current;
+    while (templine) {
+        totalLines++;
+        templine = templine->next;
+    }
+
+    codeLines = totalLines - dataLines;
+
+    fprintf(obFile, "%6d %d\n", codeLines, dataLines);
+
+
+    /* Handle extern file */
+    if (externs) {
+        CreateFileName(file, obFileName, 2);
+        obFile = fopen(obFileName, "w");
+
+        if (obFile == NULL) {
+            printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+            return;
+        }
+
+        while (externs && current) {
+	    if(current->data[0] == '0' && current->data[1] == '0' && current->data[2] == '0' && current->data[3] == '0' && current->data[4] == '0' && current->data[5] == '1') {
+        	fprintf(obFile, "%s %07d\n", externs->name, invisLineCounter);
+        	free(externs->name);
+        	tempExtern = externs;
+        	externs = externs->next;
+        	free(tempExtern);
+	    }
+	    invisLineCounter++;
+	    current = current->next;
+        }
+
+        fclose(obFile);
+    }
+
+
+    /* Writing data */
+    while (list) {
+        fprintf(obFile, "%07d %s\n", counter, list->data);
         counter++;
-        
-        /* free dynamically allocated data */
-        free(current->data);
-        temp = current;
-        current = current->next;
-        free(temp);
+
+        /* Free dynamically allocated data */
+        free(list->data);
+        templine = list;
+        list = list->next;
+        free(templine);
     }
 
     fclose(obFile);
 
+    /* Handle entry file */
     if (entry) {
         CreateFileName(file, obFileName, 1);
-
-        /* creating the .ent file */
         obFile = fopen(obFileName, "w");
 
-        /* returning error if the file couldnt be created */
         if (obFile == NULL) {
-	        printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+            printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
             return;
         }
 
@@ -78,51 +165,32 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob)
 
         fclose(obFile);
     }
-
-    if (ext) {
-        CreateFileName(file, obFileName, 2);
-
-        /* creating the .ext file */
-        obFile = fopen(obFileName, "w");
-
-        /* returning error if the file couldnt be created */
-        if (obFile == NULL) {
-	        printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
-            return;
-        }
-
-        while (ext) {
-            fprintf(obFile, "%s %07d\n", ext->name, ext->line);
-            free(ext->name);
-            tempExt = ext;
-            ext = ext->next;
-            free(tempExt);
-        }
-
-        fclose(obFile);
-    }
 }
+
+
+
 
 void CreateFileName(char* file, char* obFile, int fileType)
 {
     char* dot;
+   
     /* copying the file name into a buffer and changing the copies' ending to .ob */
     strcpy(obFile, file);
     dot = strrchr(obFile, '.');
     if(fileType == 0) {
-	    *++dot = 'o';
-	    *++dot = 'b';
-	    *++dot = '\0';
+	*++dot = 'o';
+	*++dot = 'b';
+	*++dot = '\0';
     }
-    if(fileType == 1) {
-	    *++dot = 'e';
-	    *++dot = 'n';
-	    *++dot = 't';
-	    *++dot = '\0';
+    else if(fileType == 1) {
+	*++dot = 'e';
+	*++dot = 'n';
+	*++dot = 't';
+	*++dot = '\0';
     } else {
-	    *++dot = 'e';
-	    *++dot = 'x';
-	    *++dot = 't';
-	    *++dot = '\0';
+	*++dot = 'e';
+	*++dot = 'x';
+	*++dot = 't';
+	*++dot = '\0';
     }
 }

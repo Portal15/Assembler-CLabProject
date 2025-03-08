@@ -18,7 +18,7 @@ char* IntToHex(int address);
  */
 int BinaryToInt(char *binary);
 
-int SecondPass(binaryConvertedLines *list, objectTable *ob) {
+int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *externs) {
     binaryConvertedLines *current = list;
     int error = 0;
     while (current) {
@@ -101,6 +101,13 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob) {
         					address = 0;
         				}
         				address |= E;
+					if(!(externs->name)) {
+						externsAppearance *newNode = (externsAppearance *)malloc(sizeof(externsAppearance));
+						newNode->name = object;
+						externs->next = newNode;
+					}else {
+						externs->name = object;
+					}
         			}
         			ext = ext->next;
         		}

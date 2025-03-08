@@ -68,7 +68,7 @@ typedef struct objectTable {
     objectTableData *data;
     objectTableExtern *externs;
     objectTableEntry *entries;
-    int error [2]; // [0] - line number, [1] - error type
+    int error [2];
 } objectTable;
 
 typedef struct binaryConvertedLines{
@@ -76,5 +76,9 @@ typedef struct binaryConvertedLines{
     struct binaryConvertedLines *next;
 } binaryConvertedLines;
 
+typedef struct externsAppearance{
+    char *name;
+    struct externsAppearance *next;
+} externsAppearance;
 
-#endif //DATATYPES_H
+#endif
