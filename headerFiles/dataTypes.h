@@ -76,22 +76,9 @@ typedef struct binaryConvertedLines{
     struct binaryConvertedLines *next;
 } binaryConvertedLines;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 typedef struct externsAppearance{
     char *name;
     struct externsAppearance *next;
 } externsAppearance;
 
 #endif
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-#endif //DATATYPES_H
->>>>>>> Stashed changes
