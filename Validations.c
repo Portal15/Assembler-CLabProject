@@ -22,10 +22,17 @@ int checkLineValidation(line *l, char *forbiddenWords){
 
     /* TODO: FIX THIS IF */
     if (l->cmd != NULL) {
+<<<<<<< Updated upstream
         // if (inCommandCheck(l->cmd, forbiddenWords) == 0) {
         //     printErrorMsg(INVALID_COMMAND_ERROR, l->lineNum);
         //     return 0;
         // }
+=======
+        if (inCommandCheck(l->cmd, forbiddenWords) == 0) {
+            printErrorMsg(INVALID_COMMAND_ERROR, l->lineNum);
+            return 0;
+        }
+>>>>>>> Stashed changes
         // if(l->cmd->name != NULL && isForbiddenWord(l->cmd->name, forbiddenWords)){
         //     printErrorMsg(INVALID_COMMAND_NAME_ERROR, l->lineNum);
         //     return 0;
