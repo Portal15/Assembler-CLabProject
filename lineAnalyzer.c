@@ -33,6 +33,9 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     }
     /* Initialize command structure */
     memset(cmd, 0, sizeof(command));
+    cmd->isFilled[0] = -1;
+    cmd->isFilled[1] = -1;
+    cmd->isFilled[2] = -1;
 
     /* Step 1: Remove leading spaces */
     inputedLine = removeSpacesUntilChar(inputedLine);

@@ -7,6 +7,8 @@ int isNumber(const char *str);
 int isLetter(const char *str);
 int isRegister(const char *str);
 int checkLineAnalyzerErrors(line *l);
+int inCommandCheck(command *cmd, char *forbiddenWords);
+int checkIsAllowed(const int allowedTypes[], int type);
 
 int checkLineValidation(line *l, char *forbiddenWords){
     if (checkLineAnalyzerErrors(l)){ /* The error was already act in the other file */
@@ -20,10 +22,15 @@ int checkLineValidation(line *l, char *forbiddenWords){
 
     /* TODO: FIX THIS IF */
     if (l->cmd != NULL) {
+        if (inCommandCheck(l->cmd, forbiddenWords) == 0) {
+            printErrorMsg(INVALID_COMMAND_ERROR, l->lineNum);
+            return 0;
+        }
         // if(l->cmd->name != NULL && isForbiddenWord(l->cmd->name, forbiddenWords)){
         //     printErrorMsg(INVALID_COMMAND_NAME_ERROR, l->lineNum);
         //     return 0;
         // }
+
 
         if(l->cmd->parm1Addressing0 != NULL && !isNumber(l->cmd->parm1Addressing0)){
             printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
@@ -77,6 +84,51 @@ int checkLineValidation(line *l, char *forbiddenWords){
 
     return 1;
 
+}
+
+int inCommandCheck(command *cmd, char *forbiddenWords) {
+    struct commands {
+        const char *name;
+        int parm1AllowedTypes[4];
+        int parm2TypeAllowedTypes[4];
+    };
+    /* -1 stands for nothing, -2 stands for NULL */
+    struct commands commands[] = {
+        {"mov", {0,1,3,-2}, {1,3,-2,-2}},
+        {"cmp", {0,1,3, -2}, {0,1,3,-2}},
+        {"add", {0,1,3, -2}, {1,3,-2,-2}},
+        {"sub", {0,1,3,-2}, {1,3,-2,-2}},
+        {"lea", {1,-2,-2,-2}, {1,3,-2,-2}},
+        {"clr", {1,3,-2,-2}, {-1,-2,-2,-2}},
+        {"not", {1,3,-2,-2}, {-1,-2,-2,-2}},
+        {"inc", {1,3,-2,-2}, {-1,-2,-2,-2}},
+        {"dec", {1,3,-2,-2}, {-1,-2,-2,-2}},
+        {"jmp", {1,2,-2,-2}, {-1,-2,-2,-2}},
+        {"bne", {1,2,-2,-2}, {-1,-2,-2,-2}},
+        {"jsr", {1,2,-2,-2}, {-1,-2,-2,-2}},
+        {"red", {1,3,-2,-2}, {-1,-2,-2,-2}},
+        {"prn", {0,1,3,-2}, {-1,-2,-2,-2}},
+        {"rts", {-1,-2,-2,-2}, {-1,-2,-2,-2}},
+        {"stop", {-1,-2,-2,-2}, {-1,-2,-2,-2}}
+
+    };
+    int parm1Type = cmd->isFilled[1];
+    int parm2Type = cmd->isFilled[2];
+    int i;
+    for (i = 0; i < 16; i++) {
+        if (strcmp(cmd->name, commands[i].name) == 0 && checkIsAllowed(commands[i].parm1AllowedTypes, parm1Type) && checkIsAllowed(commands[i].parm2TypeAllowedTypes, parm2Type)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int checkIsAllowed(const int allowedTypes[], int type) {
+    for (int i = 0; i < sizeof(allowedTypes) / sizeof(allowedTypes[0]); i++) {
+        if (*(allowedTypes + i) == type)
+            return 1;
+    }
+    return 0;
 }
 
 int checkLabelErrors(objectTable ot, line *l) {
@@ -145,6 +197,7 @@ int isNumber(const char *str){
     }
 
     if (*str == '\n') return 0;
+    if (*str == '.') return 0;
 
     while (*str != '\0' && *str != '\n' && flag != 0) {
         if (*str == '.' && dots >= 1) {
