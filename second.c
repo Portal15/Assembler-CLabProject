@@ -16,7 +16,7 @@ char* IntToHex(int address);
  * binary - the pointer to the first char (bit).
  * the function return the int of the converted bits.
  */
-int BinaryToInt(char *binary);
+int DecimalCharArrayToInt(char *dec);
 
 int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *externs) {
     binaryConvertedLines *current = list;
@@ -142,7 +142,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         		error = 1;
         	}
         }else {
-			current->data = IntToHex(BinaryToInt(current->data));
+			current->data = IntToHex(DecimalCharArrayToInt(current->data));
 			if(current->data == NULL) {
 				printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
 				error = 1;
@@ -154,13 +154,23 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
 }
 
 
-int BinaryToInt(char *binary) {
+int DecimalCharArrayToInt(char *dec) {
     int result = 0;
-    while (*binary) {
-	result <<= 1;
-        result += *binary - '0';
-        binary++;
+    int negative = 0;
+
+    if(*dec == '-') {
+	dec++;
+	negative = 1;	
     }
+    while (*dec) {
+        result = result * 10 + (*dec - '0');
+        dec++;
+    }
+    if(negative) {
+	result = result;
+	result++;
+    }
+
     return result;
 }
 

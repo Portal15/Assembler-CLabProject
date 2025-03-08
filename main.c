@@ -11,15 +11,6 @@
 #include "headerFiles/preProcessor.h"
 
 int main(void) {
-    // char *preForbiddenWords = "jmp\nmov";
-    // char *forbiddenWords;
-    // forbiddenWords = malloc(strlen(preForbiddenWords) + 1);
-    //
-    // strcpy(forbiddenWords, preForbiddenWords);
-    // char *mcros = preProcessor("bla.as", forbiddenWords);
-    // printf("%s\n", mcros);
-    // free(mcros);
-    // free(forbiddenWords);
 
     /* */
     objectTable *ot = createObjectTable();
@@ -27,8 +18,9 @@ int main(void) {
     int invisibleLineNum = 100;
     int tempInvisibleLineNum = invisibleLineNum;
     int dataWithNoLabel = 0;
+    int i = 0;
 
-    for (int i = 100; i < 121; i++) {
+    for (i = 100; i < 121; i++) {
         char* input = malloc(sizeof(char) * 100);
         fgets(input, 100, stdin);
         int isValid = 1;
@@ -68,7 +60,6 @@ int main(void) {
         printf("error\n");
     }
 
-    CreateFiles(list, "bla.as", ot, externs);
-    // free(list);
+    CreateFiles(list, "bla.as", ot, externs, dataWithNoLabel);
     return 0;
 }
