@@ -22,18 +22,23 @@ int checkLineValidation(line *l, char *forbiddenWords){
 
     /* TODO: FIX THIS IF */
     if (l->cmd != NULL) {
-        // if (inCommandCheck(l->cmd, forbiddenWords) == 0) {
-        //     printErrorMsg(INVALID_COMMAND_ERROR, l->lineNum);
-        //     return 0;
-        // }
-        // if(l->cmd->name != NULL && isForbiddenWord(l->cmd->name, forbiddenWords)){
-        //     printErrorMsg(INVALID_COMMAND_NAME_ERROR, l->lineNum);
-        //     return 0;
-        // }
-
+        if (inCommandCheck(l->cmd, forbiddenWords) == 0) {
+            printErrorMsg(INVALID_COMMAND_ERROR, l->lineNum);
+            return 0;
+        }
 
         if(l->cmd->parm1Addressing0 != NULL && !isNumber(l->cmd->parm1Addressing0)){
             printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
+            return 0;
+        }
+
+        if (l->cmd->parm1Addressing1 != NULL && isForbiddenWord(l->cmd->parm1Addressing1, forbiddenWords)) {
+            printErrorMsg(PARAMETER_NAME_IS_NOT_ALLOWED, l->lineNum);
+            return 0;
+        }
+
+        if (l->cmd->parm1Addressing2 != NULL && isForbiddenWord(l->cmd->parm1Addressing2, forbiddenWords)) {
+            printErrorMsg(PARAMETER_NAME_IS_NOT_ALLOWED, l->lineNum);
             return 0;
         }
 
@@ -41,8 +46,20 @@ int checkLineValidation(line *l, char *forbiddenWords){
             printErrorMsg(INVALID_PARAMETER_NOT_A_REGISTER_ERROR, l->lineNum);
             return 0;
         }
+
         if(l->cmd->parm2Addressing0 != NULL && !isNumber(l->cmd->parm2Addressing0)){
             printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
+            return 0;
+        }
+
+        if (l->cmd->parm2Addressing1 != NULL && isForbiddenWord(l->cmd->parm2Addressing1, forbiddenWords)) {
+            printErrorMsg(PARAMETER_NAME_IS_NOT_ALLOWED, l->lineNum);
+            return 0;
+
+        }
+
+        if (l->cmd->parm2Addressing2 != NULL && isForbiddenWord(l->cmd->parm2Addressing2, forbiddenWords)) {
+            printErrorMsg(PARAMETER_NAME_IS_NOT_ALLOWED, l->lineNum);
             return 0;
         }
 
@@ -116,17 +133,21 @@ int inCommandCheck(command *cmd, char *forbiddenWords) {
     int parm2Type = cmd->isFilled[2];
     int i;
     for (i = 0; i < 16; i++) {
-        if (strcmp(cmd->name, commands[i].name) == 0 && checkIsAllowed(commands[i].parm1AllowedTypes, parm1Type) && checkIsAllowed(commands[i].parm2TypeAllowedTypes, parm2Type)) {
-            return 1;
+        if (strcmp(cmd->name, commands[i].name) == 0 && checkIsAllowed(commands[i].parm1AllowedTypes, parm1Type)) {
+            if (checkIsAllowed(commands[i].parm2TypeAllowedTypes, parm2Type))
+                return 1;
         }
     }
     return 0;
 }
 
 int checkIsAllowed(const int allowedTypes[], int type) {
-    for (int i = 0; i < sizeof(allowedTypes) / sizeof(allowedTypes[0]); i++) {
-        if (*(allowedTypes + i) == type)
+    int i = 0;
+    while (i < 4 && allowedTypes[i] != -2) {
+        if (allowedTypes[i] == type) {
             return 1;
+        }
+        i++;
     }
     return 0;
 }

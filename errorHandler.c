@@ -81,6 +81,10 @@ void printErrorMsg(const int errorType, const int lineNum){
             fprintf(stderr, "Error: External label declared again at line %d.\n", lineNum);
         case INVALID_COMMAND_ERROR:
             fprintf(stderr, "Error: Invalid command at line %d.\n", lineNum);
+            break;
+        case PARAMETER_NAME_IS_NOT_ALLOWED:
+            fprintf(stderr, "Error: Parameter name is not allowed at line %d.\n", lineNum);
+            break;
         default:
             fprintf(stderr, "Error: Unknown error.\n");
             break;

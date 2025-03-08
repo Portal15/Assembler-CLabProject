@@ -1,106 +1,16 @@
 # ninja log v6
-207	243	1740994076503728216	CMakeFiles/Maman14Project.dir/utils.c.o	a251b0209f145f3c
-4	164	1741254089515222571	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-4	167	1741254089515563193	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
-210	315	1741254363114793588	Maman14Project	f21fb2b164d1b88a
-4	167	1741254089515693775	CMakeFiles/Maman14Project.dir/lineAnalyzer.c.o	9b3b8826b225ec0d
-167	191	1741254089678315773	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
-4	155	1738577398264840924	CMakeFiles/Maman14Project.dir/lineValidation.c.o	42c38840cc9be70e
-3	209	1741254362907352921	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-5	168	1741254089516110104	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
-5	168	1741254089515967314	CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o	25818fce73161e93
-167	193	1741254089677997443	CMakeFiles/Maman14Project.dir/binaryConvertor.c.o	7cf4d87c315d1ac
-7	207	1740994076303628372	CMakeFiles/Maman14Project.dir/errorHandler.c.o	1d2c5ad2613b92ef
 4	79	1740927893346123749	build.ninja	da953a4f6123ca9f
-5	172	1741254544909316717	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-174	261	1741254545077864077	Maman14Project	f21fb2b164d1b88a
-2	169	1741254674015316538	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-171	259	1741254674184233061	Maman14Project	f21fb2b164d1b88a
-4	167	1741254714328524607	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-168	251	1741254714492855673	Maman14Project	f21fb2b164d1b88a
-11	241	1741260687494227197	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-14	244	1741260687497388474	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
-20	244	1741260687503025782	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-22	244	1741260687504898107	CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o	25818fce73161e93
-5	170	1741260763833617326	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-5	173	1741260763834249948	CMakeFiles/Maman14Project.dir/errorHandler.c.o	1d2c5ad2613b92ef
-6	174	1741260763835157652	CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o	25818fce73161e93
-5	176	1741260763834089865	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
-6	177	1741260763835002236	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-6	178	1741260763834686404	CMakeFiles/Maman14Project.dir/lineAnalyzer.c.o	9b3b8826b225ec0d
-174	221	1741260764002596930	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
-176	222	1741260764004749170	CMakeFiles/Maman14Project.dir/utils.c.o	a251b0209f145f3c
-172	223	1741260764001257436	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
-173	227	1741260764002088474	CMakeFiles/Maman14Project.dir/binaryConvertor.c.o	7cf4d87c315d1ac
-227	343	1741260764055778521	Maman14Project	f21fb2b164d1b88a
-4	186	1741261054987656739	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-188	294	1741261055171122078	Maman14Project	f21fb2b164d1b88a
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-6	245	1741429087122085733	CMakeFiles/Maman14Project.dir/errorHandler.c.o	1d2c5ad2613b92ef
-5	178	1741429150458923689	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
-5	179	1741429150458435775	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
-5	179	1741429150458577983	CMakeFiles/Maman14Project.dir/lineAnalyzer.c.o	9b3b8826b225ec0d
-5	179	1741429150458812731	CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o	25818fce73161e93
-5	179	1741429150458699107	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-2	191	1741429202537748412	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-3	192	1741429202538476866	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
-4	192	1741429202539041154	CMakeFiles/Maman14Project.dir/utils.c.o	a251b0209f145f3c
-3	192	1741429202538302450	CMakeFiles/Maman14Project.dir/binaryConvertor.c.o	7cf4d87c315d1ac
-192	342	1741429202727718731	Maman14Project	f21fb2b164d1b88a
-2	231	1741429546224514863	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-232	338	1741429546453980040	Maman14Project	f21fb2b164d1b88a
-4	160	1741429594425905346	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-4	161	1741429594426330594	CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o	25818fce73161e93
-161	251	1741429594582966184	Maman14Project	f21fb2b164d1b88a
-3	170	1741429618687290807	CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o	25818fce73161e93
-170	269	1741429618854166190	Maman14Project	f21fb2b164d1b88a
-2	221	1741429747509439651	CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o	25818fce73161e93
-221	349	1741429747728316495	Maman14Project	f21fb2b164d1b88a
-3	195	1741429933756685518	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-196	309	1741429933949684881	Maman14Project	f21fb2b164d1b88a
-4	228	1741430800052343757	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
-228	335	1741430800276314364	Maman14Project	f21fb2b164d1b88a
-2	138	1741430862711240801	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
-140	230	1741430862849516643	Maman14Project	f21fb2b164d1b88a
-2	205	1741431363158551447	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-4	206	1741431363161061923	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
-206	311	1741431363362357776	Maman14Project	f21fb2b164d1b88a
-2	160	1741431500434595677	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
-160	248	1741431500592677289	Maman14Project	f21fb2b164d1b88a
-2	189	1741431575527950566	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
-190	298	1741431575715653636	Maman14Project	f21fb2b164d1b88a
-5	197	1741431799032861309	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-198	312	1741431799226597570	Maman14Project	f21fb2b164d1b88a
-7	242	1741431875951430949	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-9	244	1741431875953352388	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
-244	359	1741431876188109412	Maman14Project	f21fb2b164d1b88a
-2	156	1741431929291462019	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
-157	245	1741431929446446161	Maman14Project	f21fb2b164d1b88a
-4	209	1741432251913728592	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-210	316	1741432252118877310	Maman14Project	f21fb2b164d1b88a
-3	211	1741432799549352886	CMakeFiles/Maman14Project.dir/binaryConvertor.c.o	7cf4d87c315d1ac
-212	329	1741432799758306396	Maman14Project	f21fb2b164d1b88a
-2	187	1741432821591050383	CMakeFiles/Maman14Project.dir/binaryConvertor.c.o	7cf4d87c315d1ac
-187	397	1741432821776332693	Maman14Project	f21fb2b164d1b88a
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-1	175	1741435363605241921	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
-3	177	1741435363606608368	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-3	178	1741435363606753700	CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o	25818fce73161e93
-4	178	1741435363607501070	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
-2	178	1741435363605819041	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
-2	179	1741435363606237163	CMakeFiles/Maman14Project.dir/lineAnalyzer.c.o	9b3b8826b225ec0d
-177	211	1741435363781279032	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
-175	211	1741435363779186382	CMakeFiles/Maman14Project.dir/binaryConvertor.c.o	7cf4d87c315d1ac
-211	328	1741435363815184764	Maman14Project	f21fb2b164d1b88a
-3	165	1741435428228273164	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
-166	258	1741435428391392205	Maman14Project	f21fb2b164d1b88a
+8	197	1741449112449708001	CMakeFiles/Maman14Project.dir/errorHandler.c.o	1d2c5ad2613b92ef
+197	227	1741449112638862664	CMakeFiles/Maman14Project.dir/binaryConvertor.c.o	7cf4d87c315d1ac
+8	195	1741449112450016957	CMakeFiles/Maman14Project.dir/objectTableAnalyzer.c.o	25818fce73161e93
+196	227	1741449112638556041	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
+8	199	1741449112449917333	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
+4	155	1738577398264840924	CMakeFiles/Maman14Project.dir/lineValidation.c.o	42c38840cc9be70e
+197	225	1741449112639078204	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
+8	198	1741449112449818209	CMakeFiles/Maman14Project.dir/lineAnalyzer.c.o	9b3b8826b225ec0d
+228	337	1741449112670109241	Maman14Project	f21fb2b164d1b88a
+7	197	1741449112449575460	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
+6	197	1741449112448700050	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
+198	228	1741449112639730700	CMakeFiles/Maman14Project.dir/utils.c.o	a251b0209f145f3c
+8	176	1741449213512590001	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
+176	267	1741449213680630184	Maman14Project	f21fb2b164d1b88a
