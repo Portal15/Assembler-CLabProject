@@ -36,6 +36,7 @@
 4	186	1741261054987656739	CMakeFiles/Maman14Project.dir/Validations.c.o	105a94671be73e75
 188	294	1741261055171122078	Maman14Project	f21fb2b164d1b88a
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 6	245	1741429087122085733	CMakeFiles/Maman14Project.dir/errorHandler.c.o	1d2c5ad2613b92ef
 5	178	1741429150458923689	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
 5	179	1741429150458435775	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
@@ -82,5 +83,7 @@
 212	329	1741432799758306396	Maman14Project	f21fb2b164d1b88a
 2	187	1741432821591050383	CMakeFiles/Maman14Project.dir/binaryConvertor.c.o	7cf4d87c315d1ac
 187	397	1741432821776332693	Maman14Project	f21fb2b164d1b88a
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
