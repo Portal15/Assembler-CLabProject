@@ -51,7 +51,8 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
         if (l->cmd->parm1Addressing0 != NULL) {
             char *numStr;
             binaryCode = atoi(l->cmd->parm1Addressing0);
-
+            binaryCode = binaryCode << 3;
+            binaryCode |= A;
             numStr = (char *)malloc(MAX_NUM_LENGTH * sizeof(char));
             if (numStr == NULL) {
                 printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
@@ -199,7 +200,7 @@ int getOpcodeAndFunctCode(const line *l) {
         {"mov", 0, 0},
         {"cmp", 1, 0},
         {"add", 2, 1},
-        {"sub", 2, 1},
+        {"sub", 2, 2},
         {"lea", 4, 0},
         {"clr", 5, 1},
         {"not", 5, 2},
@@ -260,7 +261,6 @@ int getAddressingCode(const line *l, int *invisibleLineNum) {
         addressingCode1 = 3;
     }
 
-    addressingCode1 <<= 16;
 
     if (l->cmd->parm2Addressing0 != NULL) {
         addressingCode2 = 0;
@@ -278,7 +278,13 @@ int getAddressingCode(const line *l, int *invisibleLineNum) {
         addressingCode2 = 3;
     }
 
-    addressingCode2 <<= 11;
+    if (l->cmd->parm2Addressing0 == NULL && l->cmd->parm2Addressing1 == NULL && l->cmd->parm2Addressing2 == NULL && l->cmd->parm2Addressing3 == NULL) {
+        addressingCode1 <<= 11;
+    }else {
+        addressingCode1 <<= 16;
+        addressingCode2 <<= 11;
+    }
+
     final = addressingCode1 | addressingCode2;
     return final;
 }
@@ -294,9 +300,15 @@ int getRegistersCode(const line *l) {
     if (l->cmd->parm2Addressing3 != NULL) {
         registerCode2 = atoi(l->cmd->parm2Addressing3);
     }
+    if (l->cmd->parm2Addressing2 == NULL && l->cmd->parm2Addressing1 == NULL && l->cmd->parm2Addressing2 == NULL && l->cmd->parm2Addressing3 == NULL) {
+        registerCode1 <<= 8;
+    }else {
+        registerCode2 <<= 8;
+        registerCode1 <<= 13;
+    }
 
-    registerCode1 <<= 13;
-    registerCode2 <<= 8;
+
+
     final = registerCode1 | registerCode2;
     return final;
 }

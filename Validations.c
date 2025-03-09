@@ -20,7 +20,6 @@ int checkLineValidation(line *l, char *forbiddenWords){
         return 0;
     }
 
-    /* TODO: FIX THIS IF */
     if (l->cmd != NULL) {
         if (inCommandCheck(l->cmd, forbiddenWords) == 0) {
             printErrorMsg(INVALID_COMMAND_ERROR, l->lineNum);
