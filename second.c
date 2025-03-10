@@ -71,7 +71,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         	while (command && (address == -1)) {
         		if (strcmp(command->name, object) == 0) {
         			if(endLineNum == -1) {
-        				address = command->line;
+        				address = command->address;
         			}
         			address <<= 3;
         			address |= R;
@@ -84,7 +84,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         	while (entry && (address == -1)) {
         		if (strcmp(entry->name, object) == 0) {
         			if(endLineNum == -1) {
-        				address = entry->line;
+        				address = entry->address;
         			}
         			address <<= 3;
         			address |= R;
@@ -121,7 +121,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         		while (data && (address == -1)) {
         			if (strcmp(data->name, object) == 0) {
         				if(endLineNum == -1) {
-        					address = data->line;
+        					address = data->address;
         				}
         				address <<= 3;
         				address |= R;
