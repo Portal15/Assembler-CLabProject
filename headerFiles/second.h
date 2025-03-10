@@ -6,7 +6,6 @@
 #define HEX_DIGITS "0123456789abcdef"
 #define Size_Of_Address 6
 #define Digits_In_Hexa 16
-#define Bits_In_An_Hexa_Digit 4
 #define A 4 /* 100 */
 #define R 2 /* 010 */
 #define E 1 /* 001 */

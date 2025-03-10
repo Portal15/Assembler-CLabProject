@@ -3,6 +3,8 @@
 #include "headerFiles/second.h"
 #include "headerFiles/dataTypes.h"
 
+int Isalpha(char ch);
+
 /*
  * this function gets an address (that we are assuming that is 24 bits long) and converting it to hexadecimal.
  * address - the 24 bits long integer that we want to convert.
@@ -33,6 +35,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         	objectTableExtern *ext;
         	objectTableData *data;
         	objectTableCommands *command;
+		int distance = 0;
 
         	current->data++;
         	while(current->data[0] != '!') {
@@ -55,28 +58,17 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
 
         	lineNum = atoi(charLineNum);
 
-        	/* In case the addressing method is relative addressing */
-        	if(endLineNum != -1) {
-        		address = lineNum - endLineNum + 1;
-        		if(address < 0) {
-        			//address = ~address;
-        			address += 1;
-        			address <<= 11;
-        			address >>= 9;
-        			address |= A;
-        		} else {
-        			address <<= 3;
-        			address |= A;
-        		}
-        	}
+        	
 
         	/* Search in commands */
         	command = ob->commands;
         	while (command && (address == -1)) {
         		if (strcmp(command->name, object) == 0) {
-        			if(endLineNum == -1) {
-        				address = command->address;
-        			}
+        			address = command->address;
+        			if(endLineNum != -1) {
+					address += 1 - endLineNum;
+					distance = 1;
+				}
         			address <<= 3;
         			address |= R;
         		}
@@ -87,9 +79,11 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         	entry = ob->entries;
         	while (entry && (address == -1)) {
         		if (strcmp(entry->name, object) == 0) {
-        			if(endLineNum == -1) {
-        				address = entry->address;
-        			}
+        			address = entry->address;
+        			if(endLineNum != -1) {
+					address += 1 - endLineNum;
+					distance = 1;
+				}
         			address <<= 3;
         			address |= R;
         		}
@@ -97,6 +91,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         	}
 
         	/* Search in externs if not found in entries */
+		/* TODO check what happens if got endLineNum and is an extern */
         	if (address == -1) {
         		ext = ob->externs;
         		while (ext && (address == -1)) {
@@ -124,9 +119,11 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         		data = ob->data;
         		while (data && (address == -1)) {
         			if (strcmp(data->name, object) == 0) {
-        				if(endLineNum == -1) {
-        					address = data->address;
-        				}
+        				address = data->address;
+        				if(endLineNum != -1) {
+						address += 1 - endLineNum;
+						distance = 1;
+					}
         				address <<= 3;
         				address |= R;
         			}
@@ -135,7 +132,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         	}
 
         	/* If found, replace with address */
-        	if (address != -1) {
+        	if (address != -1 || distance == 1) {
         		current->data = IntToHex(address);
         		if(current->data == NULL) {
         			printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
@@ -145,13 +142,18 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         		printErrorMsg(LABEL_CALLED_BUT_WAS_NOT_DEFINED, lineNum);
         		error = 1;
         	}
-        }else {
-			current->data = IntToHex(DecimalCharArrayToInt(current->data));
-			if(current->data == NULL) {
+        }else {    
+			if(Isalpha(current->data[0])) {
+			    current->data = IntToHex((int) (current->data[0]));
+			}
+			else {
+			    current->data = IntToHex(DecimalCharArrayToInt(current->data));
+			    if(current->data == NULL) {
 				printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
 				error = 1;
+			    }
 			}		
-		}
+	}
         current = current->next;
     }
     return error;
@@ -183,7 +185,7 @@ char* IntToHex(int address) {
     unsigned int unsignedAddress;
 
     if (address < 0) {
-        unsignedAddress = (1U << 24) + address;
+	unsignedAddress = (unsigned int)(address & 0xFFFFFF);
     } else {
         unsignedAddress = (unsigned int)address;
     }
@@ -200,4 +202,8 @@ char* IntToHex(int address) {
     hexString[Size_Of_Address] = '\0';
 
     return hexString;
+}
+
+int Isalpha(char ch) {
+    return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
