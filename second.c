@@ -174,16 +174,26 @@ int DecimalCharArrayToInt(char *dec) {
     return result;
 }
 
-
 char* IntToHex(int address) {
     int i;
-    char *hexString = (char *)malloc((Size_Of_Address + 1) * sizeof(char));
-    if (hexString != NULL) {
-        for (i = (Size_Of_Address - 1); i >= 0; i--) {
-            hexString[i] = HEX_DIGITS[address % Digits_In_Hexa];
-            address >>= Bits_In_An_Hexa_Digit;
-        }
-        hexString[Size_Of_Address] = '\0';
+    unsigned int unsignedAddress;
+
+    if (address < 0) {
+        unsignedAddress = (1U << 24) + address;
+    } else {
+        unsignedAddress = (unsigned int)address;
     }
+
+    char *hexString = (char *)malloc((Size_Of_Address + 1) * sizeof(char));
+    if (hexString == NULL) {
+        return NULL;
+    }
+
+    for (i = Size_Of_Address - 1; i >= 0; i--) {
+        hexString[i] = HEX_DIGITS[unsignedAddress % Digits_In_Hexa];
+        unsignedAddress /= Digits_In_Hexa;
+    }
+    hexString[Size_Of_Address] = '\0';
+
     return hexString;
 }
