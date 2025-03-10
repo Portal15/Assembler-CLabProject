@@ -57,12 +57,16 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
 
         	/* In case the addressing method is relative addressing */
         	if(endLineNum != -1) {
-        		address = lineNum - endLineNum;
+        		address = lineNum - endLineNum + 1;
         		if(address < 0) {
-        			address = ~address;
+        			//address = ~address;
         			address += 1;
         			address <<= 11;
-        			address >>= 11;
+        			address >>= 9;
+        			address |= A;
+        		} else {
+        			address <<= 3;
+        			address |= A;
         		}
         	}
 
