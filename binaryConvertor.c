@@ -89,6 +89,8 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
         if (l->cmd->parm2Addressing0 != NULL) {
             char *numStr;
             binaryCode = atoi(l->cmd->parm2Addressing0);
+            binaryCode = binaryCode << 3;
+            binaryCode |= A;
 
             numStr = (char *)malloc(MAX_NUM_LENGTH * sizeof(char));
             if (numStr == NULL) {

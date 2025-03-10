@@ -59,7 +59,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
 
         	lineNum = atoi(charLineNum);
 
-        	
+
 
         	/* Search in commands */
         	command = ob->commands;
@@ -69,9 +69,12 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         			if(endLineNum != -1) {
 					address += 1 - endLineNum;
 					distance = 1;
+        				address <<= 3;
+        				address |= A;
+				} else {
+        				address <<= 3;
+        				address |= R;
 				}
-        			address <<= 3;
-        			address |= R;
         		}
         		command = command->next;
         	}
@@ -84,9 +87,12 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         			if(endLineNum != -1) {
 					address += 1 - endLineNum;
 					distance = 1;
+        				address <<= 3;
+        				address |= A;
+				} else {
+        				address <<= 3;
+        				address |= R;
 				}
-        			address <<= 3;
-        			address |= R;
         		}
         		entry = entry->next;
         	}
@@ -124,9 +130,12 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         				if(endLineNum != -1) {
 						address += 1 - endLineNum;
 						distance = 1;
+        					address <<= 3;
+        					address |= A;
+					} else {
+        					address <<= 3;
+        					address |= R;
 					}
-        				address <<= 3;
-        				address |= R;
         			}
         			data = data->next;
         		}
@@ -143,7 +152,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         		printErrorMsg(LABEL_CALLED_BUT_WAS_NOT_DEFINED, lineNum);
         		error = 1;
         	}
-        }else {    
+        }else {
 			if(IsAlpha(current->data[0])) {
 			    current->data = IntToHex((int) (current->data[0]));
 			} else {
@@ -152,7 +161,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
 				printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
 				error = 1;
 			    }
-			}		
+			}
 	}
         current = current->next;
     }
@@ -166,7 +175,7 @@ int DecimalCharArrayToInt(char *dec) {
 
     if(*dec == '-') {
 	dec++;
-	negative = 1;	
+	negative = 1;
     }
     while (*dec) {
         result = result * 10 + (*dec - '0');
