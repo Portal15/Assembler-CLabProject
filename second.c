@@ -3,7 +3,7 @@
 #include "headerFiles/second.h"
 #include "headerFiles/dataTypes.h"
 
-int Isalpha(char ch);
+int IsAlpha(char ch);
 
 /*
  * this function gets an address (that we are assuming that is 24 bits long) and converting it to hexadecimal.
@@ -17,8 +17,9 @@ char* IntToHex(int address);
  * this function gets a pointer to the start of 24 bits with the type of char and it is converting them into int.
  * binary - the pointer to the first char (bit).
  * the function return the int of the converted bits.
- */
+
 int DecimalCharArrayToInt(char *dec);
+ */
 
 int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *externs) {
     binaryConvertedLines *current = list;
@@ -143,11 +144,10 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         		error = 1;
         	}
         }else {    
-			if(Isalpha(current->data[0])) {
+			if(IsAlpha(current->data[0])) {
 			    current->data = IntToHex((int) (current->data[0]));
-			}
-			else {
-			    current->data = IntToHex(DecimalCharArrayToInt(current->data));
+			} else {
+			    current->data = IntToHex(atoi(current->data));
 			    if(current->data == NULL) {
 				printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
 				error = 1;
@@ -159,7 +159,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
     return error;
 }
 
-
+/*
 int DecimalCharArrayToInt(char *dec) {
     int result = 0;
     int negative = 0;
@@ -179,6 +179,7 @@ int DecimalCharArrayToInt(char *dec) {
 
     return result;
 }
+*/
 
 char* IntToHex(int address) {
     int i;
@@ -204,6 +205,6 @@ char* IntToHex(int address) {
     return hexString;
 }
 
-int Isalpha(char ch) {
+int IsAlpha(char ch) {
     return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
