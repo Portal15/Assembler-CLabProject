@@ -146,20 +146,24 @@ void CreateFileName(char* file, char* obFile, int fileType) {
     strcpy(obFile, file);
     dot = strrchr(obFile, '.');
     if(fileType == 0) {
-	*++dot = 'o';
-	*++dot = 'b';
-	*++dot = '\0';
+		*++dot = 'o';
+		*++dot = 'b';
+		*++dot = '\0';
     }
     else if(fileType == 1) {
-	*++dot = 'e';
-	*++dot = 'n';
-	*++dot = 't';
-	*++dot = '\0';
-    } else {
-	*++dot = 'e';
-	*++dot = 'x';
-	*++dot = 't';
-	*++dot = '\0';
+		*++dot = 'e';
+		*++dot = 'n';
+		*++dot = 't';
+		*++dot = '\0';
+    } else if (fileType == 3) {
+		*++dot = 'a';
+    	*++dot = 'm';
+    	*++dot = '\0';
+    }else {
+    	*++dot = 'e';
+    	*++dot = 'x';
+    	*++dot = 't';
+    	*++dot = '\0';
     }
 }
 

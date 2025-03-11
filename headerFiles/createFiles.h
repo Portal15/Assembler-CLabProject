@@ -17,4 +17,7 @@
  * the function assumes that the given file name isnt longer that 256 characters.
  */
 void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, externsAppearance *externs, int dataWithNoLabel);
+
+void CreateFileName(char* file, char* obFile, int fileType);
+
 #endif

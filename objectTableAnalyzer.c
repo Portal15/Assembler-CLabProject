@@ -178,7 +178,7 @@ objectTable* createObjectTable() {
     return ot;
 }
 
-void fillInvisibleLineNum(objectTable* ot, int* invisibleLineNum, int lineNum) {
+void fillAddresses(objectTable* ot, int* invisibleLineNum, int lineNum) {
     objectTableCommands* command = ot->commands;
     objectTableData* data = ot->data;
     objectTableExtern* ext = ot->externs;

@@ -43,6 +43,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
 
         sprintf(binaryStr, "%d", binaryCode);
         if (addLineToList(list, binaryStr)) {
+            printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
             free(binaryStr);
             return 1;
         }
@@ -62,6 +63,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
             sprintf(numStr, "%d", binaryCode);
             if (addLineToList(list, numStr)) {
                 free(numStr);
+                printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                 return 1;
             }
         }
@@ -70,6 +72,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
             str = strdup(tempBuffer);
             if (str == NULL || addLineToList(list, str)) {
                 free(str);
+                printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                 return 1;
             }
         }
@@ -81,6 +84,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
             str = strdup(tempBuffer);
             if (str == NULL || addLineToList(list, str)) {
                 free(str);
+                printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                 return 1;
             }
         }
@@ -101,6 +105,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
             sprintf(numStr, "%d", binaryCode);
             if (addLineToList(list, numStr)) {
                 free(numStr);
+                printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                 return 1;
             }
         }
@@ -109,6 +114,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
             str = strdup(tempBuffer);
             if (str == NULL || addLineToList(list, str)) {
                 free(str);
+                printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                 return 1;
             }
         }
@@ -120,6 +126,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
             str = strdup(tempBuffer);
             if (str == NULL || addLineToList(list, str)) {
                 free(str);
+                printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                 return 1;
             }
         }
@@ -140,6 +147,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
                 sprintf(numStr, "%d", binaryCode);
                 if (addLineToList(list, numStr)) {
                     free(numStr);
+                    printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                     return 1;
                 }
                 temp = temp->next;
@@ -159,12 +167,14 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
                 sprintf(letterStr, "%c", temp->letter);
                 if (addLineToList(list, letterStr)) {
                     free(letterStr);
+                    printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                     return 1;
                 }
                 temp = temp->next;
                 (*invisibleLineNum)++;
             }
             if (addLineToList(list, "\0")) {
+                printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                 return 1;
             }
             (*invisibleLineNum)++;
@@ -325,7 +335,6 @@ int addLineToList(binaryConvertedLines *list, char *data) {
 
     newNode = (binaryConvertedLines *)malloc(sizeof(binaryConvertedLines));
     if (newNode == NULL) {
-        printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
         return 1;
     }
 

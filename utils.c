@@ -38,3 +38,22 @@ int isForbiddenWord(char *word, char *forbiddenWords) {
     free(forbiddenWordsCopy);
     return 0;
 }
+
+int countLinesInFile(const char *fileName) {
+    FILE *file = fopen(fileName, "r");
+    if (file == NULL) {
+        perror("Failed to open file");
+        return -1;
+    }
+
+    int lines = 0;
+    char ch;
+    while ((ch = fgetc(file)) != EOF) {
+        if (ch == '\n') {
+            lines++;
+        }
+    }
+
+    fclose(file);
+    return lines;
+}

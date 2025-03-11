@@ -13,6 +13,6 @@
  * forbiddenWords - a string containing the forbidden words (jmp, mov, etc.)
  * return - the name of the mcros that found in the file
  */
-char *preProcessor(const char *fileName, char *forbiddenWords);
+char* preProcessor(const char *fileName, char *forbiddenWords);
 
 #endif // PRE_PROCESSOR_H

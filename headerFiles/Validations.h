@@ -4,7 +4,7 @@
 #include "dataTypes.h"
 
 
-int checkLineValidation(line *l, char *forbiddenWords, char* vars);
+int checkLineValidation(line *l, char *forbiddenWords);
 
 int checkLabelErrors(objectTable ot, line *l);
 

@@ -19,4 +19,12 @@ char *strdup(const char *s);
  */
 int isForbiddenWord(char *word, char *forbiddenWords);
 
+/*
+ * This function counts the number of lines in a file.
+ * fileName - the name of the file
+ * return - the number of lines in the file
+ */
+int countLinesInFile(const char *fileName);
+
+
 #endif // UTILS_H
