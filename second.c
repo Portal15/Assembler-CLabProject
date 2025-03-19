@@ -25,7 +25,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
     binaryConvertedLines *current = list;
     int error = 0;
     while (current) {
-        if (current->data[0] == '!') {
+        if (current->data != NULL && current->data[0] == '!') {
 	        char *object = current->data + 1;
         	int address = -1;
         	char *charLineNum;
@@ -153,14 +153,16 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         		error = 1;
         	}
         }else {
-			if(IsAlpha(current->data[0])) {
+			if(current->data != NULL && IsAlpha(current->data[0])) {
 			    current->data = IntToHex((int) (current->data[0]));
 			} else {
-			    current->data = IntToHex(atoi(current->data));
-			    if(current->data == NULL) {
-				printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
-				error = 1;
-			    }
+				if (current->data != NULL) {
+					current->data = IntToHex(atoi(current->data));
+					if(current->data == NULL) {
+						printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+						error = 1;
+					}
+				}
 			}
 	}
         current = current->next;

@@ -15,7 +15,7 @@ int checkLineValidation(line *l, char *forbiddenWords){
         return 0;
     }
 
-    if(l->label != NULL && isForbiddenWord(l->label, forbiddenWords)){
+    if(l->label != NULL && (isForbiddenWord(l->label, forbiddenWords) || !isalpha(l->label[0]))){
         printErrorMsg(INVALID_LABEL_NAME_ERROR, l->lineNum);
         return 0;
     }
@@ -93,6 +93,12 @@ int checkLineValidation(line *l, char *forbiddenWords){
             }
             if (temp.digit != NULL && !isNumber(temp.digit)) {
                 printErrorMsg(INVALID_PARAMETER_NOT_A_NUMBER_ERROR, l->lineNum);
+                return 0;
+            }
+        }
+        if (l->vars->varType == 2 || l->vars->varType == 3) {
+            if (temp.label != NULL && isForbiddenWord(temp.label, forbiddenWords)) {
+                printErrorMsg(PARAMETER_NAME_IS_NOT_ALLOWED, l->lineNum);
                 return 0;
             }
         }

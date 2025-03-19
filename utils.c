@@ -57,3 +57,22 @@ int countLinesInFile(const char *fileName) {
     fclose(file);
     return lines;
 }
+
+int isSentence(const char *input) {
+    if (input == NULL) {
+        return 0;
+    }
+    if (*input == ';') {
+        return 0;
+    }
+
+    while (*input != '\0') {
+        if (*input != ' ' || *input != '\t' || *input != '\n') {
+            return 1;
+        }
+        input++;
+    }
+
+    return 0;
+}
+

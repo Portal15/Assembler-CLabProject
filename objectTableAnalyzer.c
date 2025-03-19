@@ -174,6 +174,8 @@ objectTable* createObjectTable() {
         ot->data = NULL;
         ot->externs = NULL;
         ot->entries = NULL;
+        ot->error[0] = 0;
+        ot->error[1] = 0;
     }
     return ot;
 }

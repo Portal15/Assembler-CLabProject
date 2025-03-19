@@ -6,6 +6,7 @@
 #include "headerFiles/errorHandler.h"
 #include "headerFiles/utils.h"
 
+/* Function prototypes */
 char *removeSpacesUntilChar(char *line);
 char *getStringUntilNonLetterChar(char *str);
 char *removeUntilNonLetter(char *str);
@@ -63,6 +64,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         if (label == NULL) {
             free(currentParm);
             free(cmd);
+            newLine.error = MEMORY_ALLOCATION_ERROR;
             return newLine;
         }
         free(currentParm);
@@ -95,6 +97,16 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         }
         if (strcmp(currentParm, ".extern") == 0) {
             vars = (var *)malloc(sizeof(var));
+            if (vars == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(currentParm);
+                free(cmd);
+                free(label);
+                return newLine;
+            }
+            memset(vars, 0, sizeof(var));
+
+            free(currentParm);
             currentParm = getStringUntilNonLetterChar(inputedLine);
             if (currentParm == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
@@ -107,18 +119,39 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             inputedLine = removeSpacesUntilChar(inputedLine);
             if (!isEndOfString(inputedLine)) {
                 newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+                free(currentParm);
                 free(label);
                 free(cmd);
+                free(vars);
                 return newLine;
             }
             vars->label = strdup(currentParm);
+            if (vars->label == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(currentParm);
+                free(label);
+                free(cmd);
+                free(vars);
+                return newLine;
+            }
             vars->varType = 2;
             newLine.vars = vars;
+            free(currentParm);
             free(cmd);
             return newLine;
         }
         if (strcmp(currentParm, ".entry") == 0) {
             vars = (var *)malloc(sizeof(var));
+            if (vars == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(currentParm);
+                free(cmd);
+                free(label);
+                return newLine;
+            }
+            memset(vars, 0, sizeof(var));
+
+            free(currentParm);
             currentParm = getStringUntilNonLetterChar(inputedLine);
             if (currentParm == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
@@ -131,11 +164,21 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             inputedLine = removeSpacesUntilChar(inputedLine);
             if (!isEndOfString(inputedLine)) {
                 newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+                free(currentParm);
                 free(label);
                 free(cmd);
+                free(vars);
                 return newLine;
             }
             vars->label = strdup(currentParm);
+            if (vars->label == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(currentParm);
+                free(label);
+                free(cmd);
+                free(vars);
+                return newLine;
+            }
             vars->varType = 3;
             newLine.vars = vars;
             free(currentParm);
@@ -144,6 +187,16 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         }
         if (strcmp(currentParm, ".data") == 0) {
             vars = (var *)malloc(sizeof(var));
+            if (vars == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(currentParm);
+                free(cmd);
+                free(label);
+                return newLine;
+            }
+            memset(vars, 0, sizeof(var));
+
+            free(currentParm);
             currentParm = getStringUntilNonLetterChar(inputedLine);
             if (currentParm == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
@@ -156,6 +209,15 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
 
             vars->varType = 0;
             vars->digit = strdup(currentParm);
+            if (vars->digit == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(currentParm);
+                free(label);
+                free(cmd);
+                free(vars);
+                return newLine;
+            }
+            free(currentParm);
             inputedLine = removeSpacesUntilChar(inputedLine);
 
             while (!isEndOfString(inputedLine)) {
@@ -199,8 +261,18 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         }
         if (strcmp(currentParm, ".string") == 0) {
             vars = (var *)malloc(sizeof(var));
+            if (vars == NULL) {
+                newLine.error = MEMORY_ALLOCATION_ERROR;
+                free(currentParm);
+                free(cmd);
+                free(label);
+                return newLine;
+            }
+            memset(vars, 0, sizeof(var));
+            vars->varType = 1;
+
+            free(currentParm);
             currentParm = getStringUntilNonQuotationMarks(inputedLine);
-            inputedLine+= strlen(currentParm);
             if (currentParm == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(cmd);
@@ -208,37 +280,49 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 free(vars);
                 return newLine;
             }
-            // inputedLine = removeUntilNonLetter(inputedLine);
+            inputedLine += strlen(currentParm);
+
             if (currentParm[0] != '"') {
                 newLine.error = INVALID_PARAMETER_NOT_A_STRING_ERROR;
+                free(currentParm);
                 free(cmd);
+                free(label);
+                free(vars);
                 return newLine;
             }
-            currentParm++;
-            vars->varType = 1;
-            vars->letter = currentParm[0];
-            currentParm++;
-            while (*currentParm != '"') {
-                if (*currentParm == '\0') {
-                    newLine.error = INVALID_PARAMETER_NOT_A_STRING_ERROR;
-                    free(cmd);
-                    return newLine;
-                }
-                addLetterToVar(vars, currentParm[0]);
-                currentParm++;
+
+            vars->letter = currentParm[1]; /* First character after opening quote */
+            char *strPtr = currentParm + 2; /* Start from second character */
+
+            while (*strPtr != '"' && *strPtr != '\0') {
+                addLetterToVar(vars, *strPtr);
+                strPtr++;
             }
+
+            if (*strPtr != '"') {
+                newLine.error = INVALID_PARAMETER_NOT_A_STRING_ERROR;
+                free(currentParm);
+                free(cmd);
+                free(label);
+                free(vars);
+                return newLine;
+            }
+
             addLetterToVar(vars, '\0');
+            free(currentParm);
 
             inputedLine = removeSpacesUntilChar(inputedLine);
             if (!isEndOfString(inputedLine)) {
                 newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
                 free(cmd);
+                free(label);
                 return newLine;
             }
             newLine.vars = vars;
             free(cmd);
             return newLine;
         }
+        free(currentParm);
         free(cmd);
         free(label);
         free(vars);
@@ -248,14 +332,16 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
 
     /* Step 6: Set command name */
     cmd->name = strdup(currentParm);
-    free(currentParm);
-    currentParm = NULL;
-
     if (cmd->name == NULL) {
+        newLine.error = MEMORY_ALLOCATION_ERROR;
+        free(currentParm);
         free(label);
         free(cmd);
         return newLine;
     }
+    free(currentParm);
+    currentParm = NULL;
+
     cmd->isFilled[0] = 1;
 
     /* Step 7: Remove landing spaces */
@@ -280,6 +366,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         newLine.error = MEMORY_ALLOCATION_ERROR;
         free(label);
         freeCommand(cmd);
+        free(cmd);
         return newLine;
     }
     inputedLine = removeUntilNonLetter(inputedLine);
@@ -287,15 +374,47 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     /* Step 11: Process first parameter addressing */
     if (currentParm[0] == '#') {
         cmd->parm1Addressing0 = strdup(currentParm + 1);
+        if (cmd->parm1Addressing0 == NULL) {
+            newLine.error = MEMORY_ALLOCATION_ERROR;
+            free(currentParm);
+            free(label);
+            freeCommand(cmd);
+            free(cmd);
+            return newLine;
+        }
         cmd->isFilled[1] = 0;
     } else if (currentParm[0] == '&') {
         cmd->parm1Addressing2 = strdup(currentParm + 1);
+        if (cmd->parm1Addressing2 == NULL) {
+            newLine.error = MEMORY_ALLOCATION_ERROR;
+            free(currentParm);
+            free(label);
+            freeCommand(cmd);
+            free(cmd);
+            return newLine;
+        }
         cmd->isFilled[1] = 2;
     } else if (currentParm[0] == 'r') {
         cmd->parm1Addressing3 = strdup(currentParm + 1);
+        if (cmd->parm1Addressing3 == NULL) {
+            newLine.error = MEMORY_ALLOCATION_ERROR;
+            free(currentParm);
+            free(label);
+            freeCommand(cmd);
+            free(cmd);
+            return newLine;
+        }
         cmd->isFilled[1] = 3;
     } else {
         cmd->parm1Addressing1 = strdup(currentParm);
+        if (cmd->parm1Addressing1 == NULL) {
+            newLine.error = MEMORY_ALLOCATION_ERROR;
+            free(currentParm);
+            free(label);
+            freeCommand(cmd);
+            free(cmd);
+            return newLine;
+        }
         cmd->isFilled[1] = 1;
     }
 
@@ -307,6 +426,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
 
     /* Step 13: Check if line is empty */
     if (isEndOfString(inputedLine)) {
+        newLine.label = label;
         newLine.cmd = cmd;
         return newLine;
     }
@@ -314,6 +434,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     /* Step 14: Check for missing comma */
     if (inputedLine[0] != ',') {
         newLine.error = MISSING_COMMA_ERROR;
+        newLine.label = label;
         newLine.cmd = cmd;
         return newLine;
     }
@@ -325,6 +446,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     /* Step 16: Check if line is empty */
     if (isEndOfString(inputedLine)) {
         newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+        newLine.label = label;
         newLine.cmd = cmd;
         return newLine;
     }
@@ -332,6 +454,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     /* Step 17: Check for multiple comma */
     if (inputedLine[0] == ',') {
         newLine.error = MULTIPLE_COMMA_ERROR;
+        newLine.label = label;
         newLine.cmd = cmd;
         return newLine;
     }
@@ -342,6 +465,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         newLine.error = MEMORY_ALLOCATION_ERROR;
         free(label);
         freeCommand(cmd);
+        free(cmd);
         return newLine;
     }
     inputedLine = removeUntilNonLetter(inputedLine);
@@ -349,15 +473,47 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     /* Step 19: Process second parameter addressing */
     if (currentParm[0] == '#') {
         cmd->parm2Addressing0 = strdup(currentParm + 1);
+        if (cmd->parm2Addressing0 == NULL) {
+            newLine.error = MEMORY_ALLOCATION_ERROR;
+            free(currentParm);
+            free(label);
+            freeCommand(cmd);
+            free(cmd);
+            return newLine;
+        }
         cmd->isFilled[2] = 0;
     } else if (currentParm[0] == '&') {
         cmd->parm2Addressing2 = strdup(currentParm + 1);
+        if (cmd->parm2Addressing2 == NULL) {
+            newLine.error = MEMORY_ALLOCATION_ERROR;
+            free(currentParm);
+            free(label);
+            freeCommand(cmd);
+            free(cmd);
+            return newLine;
+        }
         cmd->isFilled[2] = 2;
     } else if (currentParm[0] == 'r') {
         cmd->parm2Addressing3 = strdup(currentParm + 1);
+        if (cmd->parm2Addressing3 == NULL) {
+            newLine.error = MEMORY_ALLOCATION_ERROR;
+            free(currentParm);
+            free(label);
+            freeCommand(cmd);
+            free(cmd);
+            return newLine;
+        }
         cmd->isFilled[2] = 3;
     } else {
         cmd->parm2Addressing1 = strdup(currentParm);
+        if (cmd->parm2Addressing1 == NULL) {
+            newLine.error = MEMORY_ALLOCATION_ERROR;
+            free(currentParm);
+            free(label);
+            freeCommand(cmd);
+            free(cmd);
+            return newLine;
+        }
         cmd->isFilled[2] = 1;
     }
 
@@ -372,13 +528,14 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
     }
 
+    newLine.label = label;
     newLine.cmd = cmd;
     newLine.vars = vars;
     return newLine;
 }
 
 char *removeSpacesUntilChar(char *line) {
-    while (isspace(*line)) {
+    while (isspace((unsigned char)*line)) {
         line++;
     }
     return line;
@@ -406,19 +563,32 @@ char *getStringUntilNonQuotationMarks(char *str) {
     char *string = malloc(sizeof(char) * MAX_SIZE_OF_STRING);
     char *start;
 
-    str++;
-
     if (string == NULL) {
         printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
         return NULL;
     }
+
+    /* Skip initial whitespace to find the quote */
+    while (isspace((unsigned char)*str)) {
+        str++;
+    }
+
+    if (*str != '"') {
+        *string = '"'; /* Add opening quote for error handling */
+        string[1] = '\0';
+        return string;
+    }
+
     *string = '"';
     start = string + 1;
+    str++; /* Move past the opening quote */
+
     while (*str != '\0' && *str != '"' && *str != '\n') {
         *start = *str;
         start++;
         str++;
     }
+
     *start = '"';
     start++;
     *start = '\0';
@@ -437,17 +607,16 @@ int isEndOfString(const char *str) {
 }
 
 void freeCommand(command *cmd) {
-    if (cmd) {
-        free(cmd->name);
-        free(cmd->parm1Addressing0);
-        free(cmd->parm1Addressing1);
-        free(cmd->parm1Addressing2);
-        free(cmd->parm1Addressing3);
-        free(cmd->parm2Addressing0);
-        free(cmd->parm2Addressing1);
-        free(cmd->parm2Addressing2);
-        free(cmd->parm2Addressing3);
-        free(cmd);
+    if (cmd != NULL) {
+        if (cmd->name != NULL) free(cmd->name);
+        if (cmd->parm1Addressing0 != NULL) free(cmd->parm1Addressing0);
+        if (cmd->parm1Addressing1 != NULL) free(cmd->parm1Addressing1);
+        if (cmd->parm1Addressing2 != NULL) free(cmd->parm1Addressing2);
+        if (cmd->parm1Addressing3 != NULL) free(cmd->parm1Addressing3);
+        if (cmd->parm2Addressing0 != NULL) free(cmd->parm2Addressing0);
+        if (cmd->parm2Addressing1 != NULL) free(cmd->parm2Addressing1);
+        if (cmd->parm2Addressing2 != NULL) free(cmd->parm2Addressing2);
+        if (cmd->parm2Addressing3 != NULL) free(cmd->parm2Addressing3);
     }
 }
 
@@ -456,13 +625,27 @@ void addDigitToVar(var *v, char* digit) {
         v = v->next;
     }
     v->next = (var *)malloc(sizeof(var));
+    if (v->next == NULL) {
+        printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+        return;
+    }
+    memset(v->next, 0, sizeof(var));
     v->next->digit = digit;
+    v->next->next = NULL;
 }
 
 void addLetterToVar(var *v, char letter) {
+    if (v == NULL) return;
+
     while (v->next != NULL) {
         v = v->next;
     }
     v->next = (var *)malloc(sizeof(var));
+    if (v->next == NULL) {
+        printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+        return;
+    }
+    memset(v->next, 0, sizeof(var));
     v->next->letter = letter;
+    v->next->next = NULL;
 }

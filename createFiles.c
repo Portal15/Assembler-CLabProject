@@ -64,7 +64,7 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, extern
 
 
     /* Handle extern file */
-    if (externs) {
+    if (externs->next) {
         CreateFileName(file, obFileName, 2);
         obFile = fopen(obFileName, "w");
 

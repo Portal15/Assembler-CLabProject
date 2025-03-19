@@ -26,5 +26,7 @@ int isForbiddenWord(char *word, char *forbiddenWords);
  */
 int countLinesInFile(const char *fileName);
 
+int isSentence(const char *input);
+
 
 #endif // UTILS_H
