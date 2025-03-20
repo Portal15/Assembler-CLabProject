@@ -29,8 +29,9 @@ void runOnFile(char* fileName) {
     int address = 100;
     int tempAddress = address;
     int dataWithNoLabel = 0;
+    int error = 0;
     int i = 0;
-    char* firstForbiddenWords = "mov\ncmp\nadd\nsub\nlea\nclr\nnot\ninc\ndec\njmp\nbne\njsr\nred\nprn\nrts\nstop\nr1\nr2\nr3\nr4\nr5\nr6\nr7\nr8";
+    char* firstForbiddenWords = "mov\ncmp\nadd\nsub\nlea\nclr\nnot\ninc\ndec\njmp\nbne\njsr\nred\nprn\nrts\nstop\nr1\nr2\nr3\nr4\nr5\nr6\nr7\nr8\n";
     char* macros = preProcessor(fileName, firstForbiddenWords);
     if (macros == NULL) {
         return;
@@ -52,7 +53,7 @@ void runOnFile(char* fileName) {
     }
     for (i = address; i < countLinesInFile(fileNameAM) + address; i++) {
         char* input = malloc(sizeof(char) * 100);
-            int isValid = 1;
+        int isValid = 1;
         line l;
         fgets(input, MAX_LINE_LENGTH, fileAM);
         if (isSentence(input)) {
@@ -61,18 +62,18 @@ void runOnFile(char* fileName) {
             isValid = checkLineValidation(&l, forbiddenWords) == 1 ? isValid : 0;
             isValid = checkLabelErrors(*ot, &l) == 1 ? isValid : 0;
             if (!isValid) {
-                return;
+                error = 1;
             }
 
             addLineToObjectTable(&l, ot);
             isValid = checkObjectTableErrors(*ot);
             if (!isValid) {
-                return;
+                error = 1;
             }
 
             isValid = binaryConvertor(&l, &address, list);
             if (isValid) {
-                return;
+                error = 1;
             }
 
             if (l.label == NULL && l.vars != NULL && (l.vars->varType == 0 || l.vars->varType == 1)) {
@@ -87,13 +88,13 @@ void runOnFile(char* fileName) {
     }
 
     if (checkForDoubles(ot)) {
-        return;
+        error = 1;
     }
 
     externs = malloc(sizeof(externsAppearance));
-    if (SecondPass(list, ot, externs)) {
-       return;
+    if (SecondPass(list, ot, externs) && !error) {
+       error = 1;
     }
-
-    CreateFiles(list, fileNameAM, ot, externs, dataWithNoLabel);
+    if (!error)
+        CreateFiles(list, fileNameAM, ot, externs, dataWithNoLabel);
 }
