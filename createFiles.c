@@ -77,14 +77,15 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, extern
 
 	externs = externs->next;
 
-        while (externs && current) {
+    while (externs && current) {
 	    if(current->data && strlen(current->data) >= 6 && current->data[0] == '0' && current->data[1] == '0' && current->data[2] == '0' && current->data[3] == '0' && current->data[4] == '0' && current->data[5] == '1') {
         	fprintf(obFile, "%s %07d\n", externs->name, invisLineCounter);
-		externs = externs->next;
+	    	if (externs->next != NULL)
+				externs = externs->next;
 	    }
 	    invisLineCounter++;
 	    current = current->next;
-        }
+    }
 
         fclose(obFile);
     }
@@ -199,9 +200,9 @@ void FreeAll(objectTableEntry *entry, objectTableExtern *ext, objectTable *ob, e
     }
 
     while (list) {
-	binaryConvertedLines *templine = list;
-	if(list->data) free(list->data);
-	list = list->next;
-	free(templine);
+		binaryConvertedLines *templine = list;
+		if(list->data) free(list->data);
+		list = list->next;
+		free(templine);
     }
 }   

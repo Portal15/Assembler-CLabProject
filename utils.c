@@ -62,7 +62,7 @@ int isSentence(const char *input) {
     if (input == NULL) {
         return 0;
     }
-    if (*input == 0) {
+    if (!*input) {
         return 0;
     }
     if (*input == ';') {

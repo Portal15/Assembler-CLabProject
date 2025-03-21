@@ -70,11 +70,16 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
         else if (l->cmd->parm1Addressing1 != NULL) {
             sprintf(tempBuffer, "!%s!%d", l->cmd->parm1Addressing1, l->lineNum);
             str = strdup(tempBuffer);
-            if (str == NULL || addLineToList(list, str)) {
-                free(str);
-                printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
-                return 1;
-            }
+	    if (str == NULL) {
+    		printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+    		return 1;
+	    }
+
+	    if (addLineToList(list, str)) {
+    		free(str);
+    		printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+    		return 1;
+	    }
         }
         else if (l->cmd->parm1Addressing2 != NULL) {
             sprintf(tempBuffer, "!%s!%d!%d",
@@ -156,6 +161,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
         }
         else if (l->vars != NULL && l->vars->varType == 1) { /* for letter */
             char *letterStr;
+
             var *temp = l->vars;
             while (temp != NULL && temp->letter != '\0') {
                 letterStr = (char *)malloc(2 * sizeof(char));
@@ -342,11 +348,10 @@ int addLineToList(binaryConvertedLines *list, char *data) {
     newNode->next = NULL;
 
     temp = list;
-    if (temp->data == NULL) {
+    if (temp->data == 0) {
         *list = *newNode;
         return 0;
     }
-
     while (temp->next != NULL) {
         temp = temp->next;
     }

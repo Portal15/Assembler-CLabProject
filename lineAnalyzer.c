@@ -15,6 +15,7 @@ void freeCommand(command *cmd);
 void addDigitToVar(var *v, char* digit);
 void addLetterToVar(var *v, char letter);
 char *getStringUntilNonQuotationMarks(char *str);
+void freeVar(var *v);
 
 line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     line newLine;
@@ -43,6 +44,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
 
     /* Step 2: Check if line is empty */
     if (isEndOfString(inputedLine)) {
+        freeCommand(cmd);
         free(cmd);
         return newLine;
     }
@@ -51,6 +53,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
     currentParm = getStringUntilNonLetterChar(inputedLine);
     if (currentParm == NULL) {
         newLine.error = MEMORY_ALLOCATION_ERROR;
+        freeCommand(cmd);
         free(cmd);
         return newLine;
     }
@@ -63,6 +66,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
 
         if (label == NULL) {
             free(currentParm);
+            freeCommand(cmd);
             free(cmd);
             newLine.error = MEMORY_ALLOCATION_ERROR;
             return newLine;
@@ -72,6 +76,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         inputedLine = removeSpacesUntilChar(inputedLine); /* Step 4.3: Remove spaces after label */
         if (isEndOfString(inputedLine)) { /* Step 4.4: Check if line is empty */
             newLine.label = label;
+            freeCommand(cmd);
             free(cmd);
             return newLine;
         }
@@ -80,6 +85,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         if (currentParm == NULL) {
             newLine.error = MEMORY_ALLOCATION_ERROR;
             free(label);
+            freeCommand(cmd);
             free(cmd);
             return newLine;
         }
@@ -92,6 +98,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         inputedLine = removeSpacesUntilChar(inputedLine);
         if (isEndOfString(inputedLine)) {
             free(currentParm);
+            freeCommand(cmd);
             free(cmd);
             return newLine;
         }
@@ -100,6 +107,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             if (vars == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(currentParm);
+                freeCommand(cmd);
                 free(cmd);
                 free(label);
                 return newLine;
@@ -111,6 +119,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             if (currentParm == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(label);
+                freeCommand(cmd);
                 free(cmd);
                 free(vars);
                 return newLine;
@@ -121,7 +130,9 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
                 free(currentParm);
                 free(label);
+                freeCommand(cmd);
                 free(cmd);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
@@ -130,13 +141,16 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(currentParm);
                 free(label);
+                freeCommand(cmd);
                 free(cmd);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
             vars->varType = 2;
             newLine.vars = vars;
             free(currentParm);
+            freeCommand(cmd);
             free(cmd);
             return newLine;
         }
@@ -145,6 +159,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             if (vars == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(currentParm);
+                freeCommand(cmd);
                 free(cmd);
                 free(label);
                 return newLine;
@@ -155,8 +170,10 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             currentParm = getStringUntilNonLetterChar(inputedLine);
             if (currentParm == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
+                freeCommand(cmd);
                 free(cmd);
                 free(label);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
@@ -166,7 +183,9 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
                 free(currentParm);
                 free(label);
+                freeCommand(cmd);
                 free(cmd);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
@@ -175,13 +194,16 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(currentParm);
                 free(label);
+                freeCommand(cmd);
                 free(cmd);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
             vars->varType = 3;
             newLine.vars = vars;
             free(currentParm);
+            freeCommand(cmd);
             free(cmd);
             return newLine;
         }
@@ -190,6 +212,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             if (vars == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(currentParm);
+                freeCommand(cmd);
                 free(cmd);
                 free(label);
                 return newLine;
@@ -201,7 +224,9 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             if (currentParm == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(label);
+                freeCommand(cmd);
                 free(cmd);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
@@ -213,7 +238,9 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(currentParm);
                 free(label);
+                freeCommand(cmd);
                 free(cmd);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
@@ -224,6 +251,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 if (inputedLine[0] != ',') {
                     newLine.error = MISSING_COMMA_ERROR;
                     free(label);
+                    freeCommand(cmd);
                     free(cmd);
                     return newLine;
                 }
@@ -232,12 +260,14 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 if (inputedLine[0] == ',') {
                     newLine.error = MULTIPLE_COMMA_ERROR;
                     free(label);
+                    freeCommand(cmd);
                     free(cmd);
                     return newLine;
                 }
                 if (isEndOfString(inputedLine)) {
                     newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
                     free(label);
+                    freeCommand(cmd);
                     free(cmd);
                     return newLine;
                 }
@@ -245,7 +275,9 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
                 if (currentParm == NULL) {
                     newLine.error = MEMORY_ALLOCATION_ERROR;
                     free(label);
+                    freeCommand(cmd);
                     free(cmd);
+                    freeVar(vars);
                     free(vars);
                     return newLine;
                 }
@@ -256,6 +288,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             }
 
             newLine.vars = vars;
+            freeCommand(cmd);
             free(cmd);
             return newLine;
         }
@@ -264,6 +297,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             if (vars == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
                 free(currentParm);
+                freeCommand(cmd);
                 free(cmd);
                 free(label);
                 return newLine;
@@ -275,8 +309,10 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             currentParm = getStringUntilNonQuotationMarks(inputedLine);
             if (currentParm == NULL) {
                 newLine.error = MEMORY_ALLOCATION_ERROR;
+                freeCommand(cmd);
                 free(cmd);
                 free(label);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
@@ -285,8 +321,10 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             if (currentParm[0] != '"') {
                 newLine.error = INVALID_PARAMETER_NOT_A_STRING_ERROR;
                 free(currentParm);
+                freeCommand(cmd);
                 free(cmd);
                 free(label);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
@@ -302,8 +340,10 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             if (*strPtr != '"') {
                 newLine.error = INVALID_PARAMETER_NOT_A_STRING_ERROR;
                 free(currentParm);
+                freeCommand(cmd);
                 free(cmd);
                 free(label);
+                freeVar(vars);
                 free(vars);
                 return newLine;
             }
@@ -314,17 +354,21 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
             inputedLine = removeSpacesUntilChar(inputedLine);
             if (!isEndOfString(inputedLine)) {
                 newLine.error = UNEXPECTED_TEXT_AFTER_END_OF_LINE_ERROR;
+                freeCommand(cmd);
                 free(cmd);
                 free(label);
                 return newLine;
             }
             newLine.vars = vars;
+            freeCommand(cmd);
             free(cmd);
             return newLine;
         }
         free(currentParm);
+        freeCommand(cmd);
         free(cmd);
         free(label);
+        freeVar(vars);
         free(vars);
         newLine.error = INVALID_COMMAND_NAME_ERROR;
         return newLine;
@@ -336,6 +380,7 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
         newLine.error = MEMORY_ALLOCATION_ERROR;
         free(currentParm);
         free(label);
+        freeCommand(cmd);
         free(cmd);
         return newLine;
     }
@@ -617,6 +662,17 @@ void freeCommand(command *cmd) {
         if (cmd->parm2Addressing1 != NULL) free(cmd->parm2Addressing1);
         if (cmd->parm2Addressing2 != NULL) free(cmd->parm2Addressing2);
         if (cmd->parm2Addressing3 != NULL) free(cmd->parm2Addressing3);
+    }
+}
+
+void freeVar(var *v) {
+    var *temp;
+    while (v != NULL) {
+        temp = v;
+        v = v->next;
+        if (temp->digit != NULL) free(temp->digit);
+        if (temp->label != NULL) free(temp->label);
+        free(temp);
     }
 }
 

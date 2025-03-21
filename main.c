@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+
 void runOnFile(char* fileName) {
     char fileNameAM[256];
     FILE *fileAM;
@@ -31,13 +32,15 @@ void runOnFile(char* fileName) {
     int dataWithNoLabel = 0;
     int error = 0;
     int i = 0;
+    int numOfLines = 0;
+    int lineNum = 0;
     char* firstForbiddenWords = "mov\ncmp\nadd\nsub\nlea\nclr\nnot\ninc\ndec\njmp\nbne\njsr\nred\nprn\nrts\nstop\nr1\nr2\nr3\nr4\nr5\nr6\nr7\nr8\n";
     char* macros = preProcessor(fileName, firstForbiddenWords);
     if (macros == NULL) {
         return;
     }
     externsAppearance *externs;
-    char *forbiddenWords = malloc(strlen(firstForbiddenWords) + strlen(macros) + 1); // +1 for the null terminator
+    char *forbiddenWords = malloc(strlen(firstForbiddenWords) + strlen(macros) + 1);
     if (forbiddenWords == NULL) {
         printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
         return;
@@ -51,7 +54,11 @@ void runOnFile(char* fileName) {
         printErrorMsg(FAILED_TO_OPEN_FILE_ERROR, -1);
         return;
     }
-    for (i = address; i < countLinesInFile(fileNameAM) + address; i++) {
+    numOfLines = countLinesInFile(fileNameAM) + address;
+    list->data = NULL;
+    for (lineNum = address; lineNum < numOfLines; lineNum++) {
+	i = lineNum;
+    	printf("%d\n", i);
         char* input = malloc(sizeof(char) * 100);
         int isValid = 1;
         line l;
@@ -83,9 +90,13 @@ void runOnFile(char* fileName) {
             fillAddresses(ot, &tempAddress, i);
             free(input);
             freeCommand(l.cmd);
+            free(l.cmd);
             tempAddress = address;
         }
     }
+    free(macros);
+    fclose(fileAM);
+    free(forbiddenWords);
 
     if (checkForDoubles(ot)) {
         error = 1;
