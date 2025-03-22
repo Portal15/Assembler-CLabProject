@@ -1,12 +1,8 @@
 #include "headerFiles/errorHandler.h"
-#include "headerFiles/lineAnalyzer.h"
 #include "headerFiles/utils.h"
 #include "headerFiles/dataTypes.h"
 
-#include "headerFiles/errorHandler.h"
-#include "headerFiles/lineAnalyzer.h"
-#include "headerFiles/utils.h"
-#include "headerFiles/dataTypes.h"
+var* varDupe(var *v);
 
 void addLineToObjectTable(line *l, objectTable *ot) {
     if(l->label != NULL) {
@@ -18,7 +14,7 @@ void addLineToObjectTable(line *l, objectTable *ot) {
                 ot->error[1] = MEMORY_ALLOCATION_ERROR;
                 return;
             }
-            newNode->name = l->label;
+            newNode->name = strdup(l->label);
             newNode->line = l->lineNum;
             newNode->next = NULL;
 
@@ -49,8 +45,8 @@ void addLineToObjectTable(line *l, objectTable *ot) {
                 ot->error[1] = MEMORY_ALLOCATION_ERROR;
                 return;
             }
-            newNode->name = l->label;
-            newNode->value = *l->vars;
+            newNode->name = strdup(l->label);
+            newNode->value = varDupe(l->vars);
             newNode->line = l->lineNum;
             newNode->next = NULL;
 
@@ -81,8 +77,8 @@ void addLineToObjectTable(line *l, objectTable *ot) {
                 ot->error[1] = MEMORY_ALLOCATION_ERROR;
                 return;
             }
-            newNode->name = l->label;
-            newNode->value = *l->vars;
+            newNode->name = strdup(l->label);
+            newNode->value = varDupe(l->vars);
             newNode->line = l->lineNum;
             newNode->next = NULL;
 
@@ -112,7 +108,7 @@ void addLineToObjectTable(line *l, objectTable *ot) {
             ot->error[1] = MEMORY_ALLOCATION_ERROR;
             return;
         }
-        newNode->name = l->vars->label;
+        newNode->name = strdup(l->vars->label);
         newNode->line = l->lineNum;
         newNode->next = NULL;
 
@@ -143,7 +139,7 @@ void addLineToObjectTable(line *l, objectTable *ot) {
             ot->error[1] = MEMORY_ALLOCATION_ERROR;
             return;
         }
-        newNode->name = l->vars->label;
+        newNode->name = strdup(l->vars->label);
         newNode->line = l->lineNum;
         newNode->next = NULL;
 
@@ -180,7 +176,7 @@ objectTable* createObjectTable() {
     return ot;
 }
 
-void fillAddresses(objectTable* ot, int* invisibleLineNum, int lineNum) {
+void fillAddresses(objectTable* ot, const int* invisibleLineNum, int lineNum) {
     objectTableCommands* command = ot->commands;
     objectTableData* data = ot->data;
     objectTableExtern* ext = ot->externs;
@@ -256,4 +252,18 @@ int checkForDoubles(objectTable* ot) {
     }
     return 0;
 
+}
+
+var* varDupe(var *v) {
+    if (v == NULL) return NULL;
+
+    var* newVar = (var*)malloc(sizeof(var));
+    if(newVar != NULL) {
+        newVar->varType = v->varType;
+        newVar->label = strdup(v->label);
+        newVar->digit = strdup(v->digit);
+        newVar->letter = v->letter;
+        newVar->next = varDupe(v->next);
+    }
+    return newVar;
 }

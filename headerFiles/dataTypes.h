@@ -43,7 +43,7 @@ typedef struct objectTableCommands {
 
 typedef struct objectTableData {
     char *name;
-    var value;
+    var *value;
     int line;
     int address;
     struct objectTableData *next;

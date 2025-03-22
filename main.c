@@ -13,6 +13,9 @@
 
 void runOnFile(char* fileName);
 
+void freeAll(objectTable *ot, externsAppearance *externs, binaryConvertedLines *list);
+void freeLine(line *l);
+
 int main(int argc, char** argv) {
     while (argc > 1) {
         runOnFile(argv[argc - 1]);
@@ -89,8 +92,7 @@ void runOnFile(char* fileName) {
 
             fillAddresses(ot, &tempAddress, i);
             free(input);
-            freeCommand(l.cmd);
-            free(l.cmd);
+            freeLine(&l);
             tempAddress = address;
         }
     }
@@ -108,4 +110,69 @@ void runOnFile(char* fileName) {
     }
     if (!error)
         CreateFiles(list, fileNameAM, ot, externs, dataWithNoLabel);
+
+    freeAll(ot, externs, list);
+}
+
+void freeAll(objectTable *ot, externsAppearance *externs, binaryConvertedLines *list) {
+    objectTableEntry *entry = ot->entries;
+    objectTableExtern *ext = ot->externs;
+    objectTableData *data = ot->data;
+    objectTableCommands *command = ot->commands;
+
+    while (entry) {
+        objectTableEntry *tempEntry = entry->next;
+        if (entry->name != NULL) free(entry->name);
+        free(entry);
+        entry = tempEntry;
+    }
+
+
+    while (ext) {
+        objectTableExtern *tempExt = ext->next;
+        if (ext->name != NULL) free(ext->name);
+        free(ext);
+        ext = tempExt;
+    }
+
+    while (data) {
+        objectTableData *tempData = data->next;
+        if (data->name != NULL) free(data->name);
+        if (data->value != NULL) freeVar(data->value);
+        free(data);
+        data = tempData;
+    }
+
+    while (command) {
+        objectTableCommands *tempCommand = command->next;
+        if (command->name != NULL) free(command->name);
+        free(command);
+        command = tempCommand;
+    }
+
+    while (externs) {
+        externsAppearance *tempExtern = externs;
+        if (externs->name != NULL) free(externs->name);
+        externs = externs->next;
+        free(tempExtern);
+    }
+
+    while (list) {
+        binaryConvertedLines *tempLine = list->next;
+        if(list->data != NULL) free(list->data);
+        free(list);
+        list = tempLine;
+    }
+    free(ot);
+}
+
+void freeLine(line *l) {
+    if (l == NULL) return;
+    if (l->label != NULL) free(l->label);
+    if (l->cmd != NULL) {
+        freeCommand(l->cmd);
+    }
+    if (l->vars != NULL) {
+        freeVar(l->vars);
+    }
 }

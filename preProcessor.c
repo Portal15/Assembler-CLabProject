@@ -113,6 +113,7 @@ char *preProcessor(const char *fileName, char *forbiddenWords) {
                 free(mcroName);
                 cleanupMcros(mcros);
                 fclose(amFile);
+                fclose(asFile);
                 remove(newFileName);
                 free(newFileName);
                 return NULL;
@@ -133,6 +134,7 @@ char *preProcessor(const char *fileName, char *forbiddenWords) {
                         free(mcroName);
                         cleanupMcros(mcros);
                         fclose(amFile);
+                        fclose(asFile);
                         remove(newFileName);
                         free(newFileName);
                         return NULL;
@@ -147,6 +149,7 @@ char *preProcessor(const char *fileName, char *forbiddenWords) {
                 free(mcroName);
                 cleanupMcros(mcros);
                 fclose(amFile);
+                fclose(asFile);
                 remove(newFileName);
                 free(newFileName);
                 return NULL;
@@ -160,6 +163,7 @@ char *preProcessor(const char *fileName, char *forbiddenWords) {
                 free(newMcro);
                 cleanupMcros(mcros);
                 fclose(amFile);
+                fclose(asFile);
                 remove(newFileName);
                 free(newFileName);
                 return NULL;
@@ -185,6 +189,7 @@ char *preProcessor(const char *fileName, char *forbiddenWords) {
     mcroNames = getMcrosName(mcros);
     cleanupMcros(mcros);
     fclose(amFile);
+    fclose(asFile);
     if (createNewFile == 0)
         remove(newFileName);
     free(newFileName);
@@ -364,11 +369,11 @@ char *getMcrosName(linkedListOfMcros *mcros) {
     char *result, *ptr;
 
     while (current != NULL) {
-        totalLength += strlen(current->mcro->mcroName) + 1; // +1 for '\n'
+        totalLength += strlen(current->mcro->mcroName) + 1;
         current = current->next;
     }
 
-    result = (char *)malloc(totalLength + 1); // +1 for the null terminator
+    result = (char *)malloc(totalLength + 1);
     if (result == NULL) {
         printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
         return NULL;

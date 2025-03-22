@@ -23,10 +23,13 @@ int DecimalCharArrayToInt(char *dec);
 
 int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *externs) {
     binaryConvertedLines *current = list;
+    char* temp;
     int error = 0;
+	char *object;
     while (current) {
+    	temp = current->data;
         if (current->data != NULL && current->data[0] == '!') {
-	        char *object = current->data + 1;
+	        object = current->data + 1;
         	int address = -1;
         	char *charLineNum;
         	int lineNum;
@@ -36,7 +39,7 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         	objectTableExtern *ext;
         	objectTableData *data;
         	objectTableCommands *command;
-		int distance = 0;
+			int distance = 0;
 
         	current->data++;
         	while(current->data[0] != '!') {
@@ -98,7 +101,6 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         	}
 
         	/* Search in externs if not found in entries */
-		/* TODO check what happens if got endLineNum and is an extern */
         	if (address == -1) {
         		ext = ob->externs;
         		while (ext && (address == -1)) {
@@ -108,13 +110,15 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
         				}
         				address |= E;
 					if(!externs && !(externs->name)) {
-						externs->name = object;
+						externs->name = strdup(object);
 						externs = externs->next;
+						externs->next = NULL;
 					}else {
 						externsAppearance *newNode = (externsAppearance *)malloc(sizeof(externsAppearance));
-						newNode->name = object;
+						newNode->name = strdup(object);
 						externs->next = newNode;
 						externs = externs->next;
+						externs->next = NULL;
 					}
         			}
         			ext = ext->next;
@@ -166,31 +170,10 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
 			}
 	}
         current = current->next;
+    	if (temp != NULL && *temp != '\0') free(temp);
     }
     return error;
 }
-
-/*
-int DecimalCharArrayToInt(char *dec) {
-    int result = 0;
-    int negative = 0;
-
-    if(*dec == '-') {
-	dec++;
-	negative = 1;
-    }
-    while (*dec) {
-        result = result * 10 + (*dec - '0');
-        dec++;
-    }
-    if(negative) {
-	result = result;
-	result++;
-    }
-
-    return result;
-}
-*/
 
 char* IntToHex(int address) {
     int i;
