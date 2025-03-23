@@ -11,16 +11,31 @@
 #include "headerFiles/preProcessor.h"
 #include "headerFiles/utils.h"
 
+#define NUM_OF_DASHES 40
+
 void runOnFile(char* fileName);
 
 void freeAll(objectTable *ot, externsAppearance *externs, binaryConvertedLines *list);
 void freeLine(line *l);
 
 int main(int argc, char** argv) {
+    int i;
     while (argc > 1) {
+        for (i = 0; i < NUM_OF_DASHES - strlen(argv[argc - 1]); i++) {
+            if (i == (NUM_OF_DASHES - strlen(argv[argc - 1])) / 2) {
+                printf(" %s ", argv[argc - 1]);
+            }else {
+                printf("-");
+            }
+        }
+        printf("\n");
         runOnFile(argv[argc - 1]);
         argc--;
     }
+    for (i = 0; i < NUM_OF_DASHES; i++) {
+        printf("-");
+    }
+    printf("\n");
     return 0;
 }
 
@@ -40,8 +55,10 @@ void runOnFile(char* fileName) {
     char* firstForbiddenWords = "mov\ncmp\nadd\nsub\nlea\nclr\nnot\ninc\ndec\njmp\nbne\njsr\nred\nprn\nrts\nstop\nr1\nr2\nr3\nr4\nr5\nr6\nr7\nr8\n";
     char* macros = preProcessor(fileName, firstForbiddenWords);
     if (macros == NULL) {
+        printf("-X-     failed to create macro file\n");
         return;
     }
+    printf("-V-     after macro file successfully created\n");
     externsAppearance *externs;
     char *forbiddenWords = malloc(strlen(firstForbiddenWords) + strlen(macros) + 1);
     if (forbiddenWords == NULL) {
@@ -60,8 +77,7 @@ void runOnFile(char* fileName) {
     numOfLines = countLinesInFile(fileNameAM) + address;
     list->data = NULL;
     for (lineNum = address; lineNum < numOfLines; lineNum++) {
-	i = lineNum;
-    	printf("%d\n", i);
+	    i = lineNum;
         char* input = malloc(sizeof(char) * 100);
         int isValid = 1;
         line l;
@@ -109,8 +125,11 @@ void runOnFile(char* fileName) {
     if (SecondPass(list, ot, externs) && !error) {
        error = 1;
     }
-    if (!error)
+    if (!error) {
         CreateFiles(list, fileNameAM, ot, externs, dataWithNoLabel);
+    }else {
+        printf("-X-     failed to create files because previous errors\n");
+    }
 
     freeAll(ot, externs, list);
 }

@@ -57,13 +57,16 @@
         CreateFileName(file, obFileName, 2);
         obFile = fopen(obFileName, "w");
 
-	/* Return error if the file couldn't be created */
-	if (obFile == NULL) {
-	    printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
-	    return;
-	}
 
-	externs = externs->next;
+		/* Return error if the file couldn't be created */
+		if (obFile == NULL) {
+			printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+			return;
+		}
+    	printf("-V-     externs file successfully created\n");
+
+
+		externs = externs->next;
 
         while (externs && current) {
 	    if(current->data && strlen(current->data) >= 6 && current->data[0] == '0' && current->data[1] == '0' && current->data[2] == '0' && current->data[3] == '0' && current->data[4] == '0' && current->data[5] == '1') {
@@ -87,11 +90,14 @@
     obFile = fopen(obFileName, "w");
 
 
+
     /* Return error if the file couldn't be created */
     if (obFile == NULL) {
         printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
-	return;
+		return;
     }
+ 	printf("-V-     object file successfully created\n");
+
 
     fprintf(obFile, "%6d %d\n", codeLines, dataLines);
 
@@ -109,11 +115,14 @@
         CreateFileName(file, obFileName, 1);
         obFile = fopen(obFileName, "w");
 
-        /* Return error if the file couldn't be created */
-	if (obFile == NULL) {
-	    printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
-	    return;
-	}
+    	/* Return error if the file couldn't be created */
+		if (obFile == NULL) {
+			printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+			return;
+		}
+    	printf("-V-     entry file successfully created\n");
+
+
 
         while (entry) {
             fprintf(obFile, "%s %07d\n", entry->name, entry->address);
