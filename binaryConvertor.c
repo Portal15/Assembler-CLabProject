@@ -350,10 +350,11 @@ int addLineToList(binaryConvertedLines *list, char *data) {
     temp = list;
     if (temp->data == 0) {
         list->data = newNode->data;
+	    list->next = NULL;
         free(newNode);
         return 0;
     }
-    while (temp->next != NULL) {
+    while (temp != NULL && temp->next != NULL) {
         temp = temp->next;
     }
     temp->next = newNode;

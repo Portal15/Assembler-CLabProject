@@ -25,11 +25,10 @@ int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *e
     binaryConvertedLines *current = list;
     char* temp;
     int error = 0;
-	char *object;
     while (current) {
     	temp = current->data;
         if (current->data != NULL && current->data[0] == '!') {
-	        object = current->data + 1;
+	        char *object = current->data + 1;
         	int address = -1;
         	char *charLineNum;
         	int lineNum;

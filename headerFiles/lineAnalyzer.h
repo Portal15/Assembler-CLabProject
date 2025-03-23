@@ -13,6 +13,4 @@ line analyzeLine(char *inputedLine, int lineNum, objectTable *ot);
 
 void freeCommand(command *cmd);
 
-void freeVar(var *v);
-
-#endif // LINE_ANALYZER_H
+#endif

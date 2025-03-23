@@ -1,7 +1,3 @@
-//
-// Created by Yonatan Ben Yehuda on 27/01/2025.
-//
-
 #ifndef OBJECTTABLEANALYZER_H
 #define OBJECTTABLEANALYZER_H
 
@@ -11,9 +7,10 @@ void addLineToObjectTable(line *l, objectTable *ot);
 
 objectTable* createObjectTable();
 
-void fillAddresses(objectTable* ot, const int* invisibleLineNum, int lineNum);
+void fillAddresses(objectTable* ot, int* invisibleLineNum, int lineNum);
 
 int checkForDoubles(objectTable* ot);
 
+void freeVar(var *v);
 
-#endif //OBJECTTABLEANALYZER_H
+#endif

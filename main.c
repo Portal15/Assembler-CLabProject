@@ -105,6 +105,7 @@ void runOnFile(char* fileName) {
     }
 
     externs = malloc(sizeof(externsAppearance));
+    externs->name = NULL;
     if (SecondPass(list, ot, externs) && !error) {
        error = 1;
     }

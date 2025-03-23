@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 /*
  * this function gets a file name and a buffer and its copying the file name into the buffer
  * with an ending of .ob or .ent or .ext
@@ -15,9 +14,9 @@
  * fileType - the integer that will decide which ending is going to be.
  * the function assumes that the file name is fixed (it has a .txt ending) since it wouldnt have been called otherwise.
  */
-void CreateFileName(char* file, char* obFile, int fileType);
 
-void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, externsAppearance *externs, int dataWithNoLabel) {
+
+ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, externsAppearance *externs, int dataWithNoLabel) {
     FILE *obFile;
     int counter = 100;
     int invisLineCounter = 100;
@@ -29,12 +28,6 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, extern
     objectTableData *data = ob->data;
     var *value;
     int dataLines = dataWithNoLabel;
-
-    objectTableEntry *entryFree = entry;
-    objectTableExtern *extFree = ext;
-    objectTable *obFree = ob;
-    externsAppearance *externsFree = externs;
-    binaryConvertedLines *listFree = list;
 
     int totalLines = 0;
     int codeLines;
@@ -72,15 +65,16 @@ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, extern
 
 	externs = externs->next;
 
-    while (externs && current) {
+        while (externs && current) {
 	    if(current->data && strlen(current->data) >= 6 && current->data[0] == '0' && current->data[1] == '0' && current->data[2] == '0' && current->data[3] == '0' && current->data[4] == '0' && current->data[5] == '1') {
         	fprintf(obFile, "%s %07d\n", externs->name, invisLineCounter);
-	    	if (externs->next != NULL)
-				externs = externs->next;
+		if (externs->next != NULL) {
+		    externs = externs->next;
+		}
 	    }
 	    invisLineCounter++;
 	    current = current->next;
-    }
+        }
 
         fclose(obFile);
     }
@@ -158,4 +152,4 @@ void CreateFileName(char* file, char* obFile, int fileType) {
     	*++dot = '\0';
     }
 }
-
+  
