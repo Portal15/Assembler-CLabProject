@@ -7,7 +7,6 @@
  * s - the word to duplicate
  * return - a duplicate of the string s
  */
-
 char *strdup(const char *s);
 
 /* This function gets line and checks if it is a forbidden word.
@@ -26,6 +25,10 @@ int isForbiddenWord(char *word, char *forbiddenWords);
  */
 int countLinesInFile(const char *fileName);
 
+/* This function checks if a string is an allowed sentence (not a blank and not start with ;).
+ * input - the string to be checked
+ * return - 1 if the string is a sentence, 0 otherwise
+ */
 int isSentence(const char *input);
 
 

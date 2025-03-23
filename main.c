@@ -45,20 +45,17 @@ void runOnFile(char* fileName) {
     FILE *fileAM;
     objectTable *ot = createObjectTable();
     binaryConvertedLines *list = malloc(sizeof(binaryConvertedLines));
-    int address = 100;
-    int tempAddress = address;
-    int dataWithNoLabel = 0;
-    int error = 0;
-    int i = 0;
-    int numOfLines = 0;
-    int lineNum = 0;
+    int address = 100, tempAddress = address, dataWithNoLabel = 0, error = 0, i = 0, numOfLines = 0, lineNum = 0;
+
     char* firstForbiddenWords = "mov\ncmp\nadd\nsub\nlea\nclr\nnot\ninc\ndec\njmp\nbne\njsr\nred\nprn\nrts\nstop\nr1\nr2\nr3\nr4\nr5\nr6\nr7\nr8\n";
+    /* Preprocessor */
     char* macros = preProcessor(fileName, firstForbiddenWords);
     if (macros == NULL) {
         printf("-X-     failed to create macro file\n");
         return;
     }
     printf("-V-     after macro file successfully created\n");
+    /* End of Preprocessor */
     externsAppearance *externs;
     char *forbiddenWords = malloc(strlen(firstForbiddenWords) + strlen(macros) + 1);
     if (forbiddenWords == NULL) {
@@ -76,12 +73,12 @@ void runOnFile(char* fileName) {
     }
     numOfLines = countLinesInFile(fileNameAM) + address;
     list->data = NULL;
-    for (lineNum = address; lineNum < numOfLines; lineNum++) {
+    for (lineNum = address; lineNum < numOfLines; lineNum++) { /* This for loop presents the first pass */
 	    i = lineNum;
         char* input = malloc(sizeof(char) * 100);
         int isValid = 1;
         line l;
-        fgets(input, MAX_LINE_LENGTH, fileAM);
+        fgets(input, MAX_LINE_LENGTH, fileAM); /* Gets the input from the file */
         if (isSentence(input)) {
             l = analyzeInput(input, i);
 
@@ -122,7 +119,7 @@ void runOnFile(char* fileName) {
 
     externs = malloc(sizeof(externsAppearance));
     externs->name = NULL;
-    if (SecondPass(list, ot, externs) && !error) {
+    if (SecondPass(list, ot, externs) && !error) { /* This function presents the second pass */
        error = 1;
     }
     if (!error) {

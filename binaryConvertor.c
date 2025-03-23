@@ -12,16 +12,39 @@
 #define MAX_NUM_LENGTH 20
 #define MAX_LINE_LENGTH 256
 
-/* Forward declarations */
+/* This function checks if the line is a command.
+ * l - the line to be checked
+ * return - 1 if the line is a command, 0 otherwise
+ */
 int isCommand(const line *l);
-int getBinaryCodeFromNumber(int number);
+
+/* This function gets the opcode and funct code of the command.
+ * l - the line to be checked
+ * return - the opcode and funct code as integer
+ */
 int getOpcodeAndFunctCode(const line *l);
-int getAddressingCode(const line *l, int *invisibleLineNum);
+
+/* This function gets the addressing code of the command.
+ * l - the line to be checked
+ * address - a pointer to the address
+ * return - the addressing code as integer
+ */
+int getAddressingCode(const line *l, int *address);
+
+/* This function gets the registers code of the command.
+ * l - the line to be checked
+ * return - the registers code as integer
+ */
 int getRegistersCode(const line *l);
+
+/* This function adds a line to the binary list.
+ * list - the list to add the line to
+ * data - the data to be added
+ * return - 1 if there is an error, 0 otherwise
+ */
 int addLineToList(binaryConvertedLines *list, char *data);
 
-/* Main binary converter function */
-int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) {
+int binaryConvertor(const line *l, int *address, binaryConvertedLines *list) {
     int binaryCode = 0;
     char tempBuffer[MAX_LINE_LENGTH];
     char *str;
@@ -31,7 +54,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
         char *binaryStr;
 
         binaryCode = getOpcodeAndFunctCode(l);
-        binaryCode |= getAddressingCode(l, invisibleLineNum);
+        binaryCode |= getAddressingCode(l, address);
         binaryCode |= getRegistersCode(l);
         binaryCode |= A;
 
@@ -85,7 +108,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
             sprintf(tempBuffer, "!%s!%d!%d",
                 l->cmd->parm1Addressing2,
                 l->lineNum,
-                *invisibleLineNum);
+                *address);
             str = strdup(tempBuffer);
             if (str == NULL || addLineToList(list, str)) {
                 free(str);
@@ -127,7 +150,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
             sprintf(tempBuffer, "!%s!%d!%d",
                 l->cmd->parm2Addressing2,
                 l->lineNum,
-                *invisibleLineNum);
+                *address);
             str = strdup(tempBuffer);
             if (str == NULL || addLineToList(list, str)) {
                 free(str);
@@ -135,7 +158,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
                 return 1;
             }
         }
-        (*invisibleLineNum)++;
+        (*address)++;
     }else {
         if (l->vars != NULL && l->vars->varType == 0) { /* for number */
             char *numStr;
@@ -156,7 +179,7 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
                     return 1;
                 }
                 temp = temp->next;
-                (*invisibleLineNum)++;
+                (*address)++;
             }
         }
         else if (l->vars != NULL && l->vars->varType == 1) { /* for letter */
@@ -177,33 +200,20 @@ int binaryConvertor(line *l, int *invisibleLineNum, binaryConvertedLines *list) 
                     return 1;
                 }
                 temp = temp->next;
-                (*invisibleLineNum)++;
+                (*address)++;
             }
             if (addLineToList(list, "\0")) {
                 printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
                 return 1;
             }
-            (*invisibleLineNum)++;
+            (*address)++;
         }
     }
     return 0;
 }
 
-/* Helper function implementations */
 int isCommand(const line *l) {
     return l != NULL && l->cmd != NULL;
-}
-
-int getBinaryCodeFromNumber(int number) {
-    int binaryCode = 0;
-    int i = 1;
-
-    while (number != 0) {
-        binaryCode += (number % 2) * i;
-        number /= 2;
-        i *= 10;
-    }
-    return binaryCode;
 }
 
 int getOpcodeAndFunctCode(const line *l) {
@@ -258,22 +268,22 @@ int getOpcodeAndFunctCode(const line *l) {
     return final;
 }
 
-int getAddressingCode(const line *l, int *invisibleLineNum) {
+int getAddressingCode(const line *l, int *address) {
     int addressingCode1 = 0;
     int addressingCode2 = 0;
     int final;
 
     if (l->cmd->parm1Addressing0 != NULL) {
         addressingCode1 = 0;
-        (*invisibleLineNum)++;
+        (*address)++;
     }
     else if (l->cmd->parm1Addressing1 != NULL) {
         addressingCode1 = 1;
-        (*invisibleLineNum)++;
+        (*address)++;
     }
     else if (l->cmd->parm1Addressing2 != NULL) {
         addressingCode1 = 2;
-        (*invisibleLineNum)++;
+        (*address)++;
     }
     else if (l->cmd->parm1Addressing3 != NULL) {
         addressingCode1 = 3;
@@ -282,15 +292,15 @@ int getAddressingCode(const line *l, int *invisibleLineNum) {
 
     if (l->cmd->parm2Addressing0 != NULL) {
         addressingCode2 = 0;
-        (*invisibleLineNum)++;
+        (*address)++;
     }
     else if (l->cmd->parm2Addressing1 != NULL) {
         addressingCode2 = 1;
-        (*invisibleLineNum)++;
+        (*address)++;
     }
     else if (l->cmd->parm2Addressing2 != NULL) {
         addressingCode2 = 2;
-        (*invisibleLineNum)++;
+        (*address)++;
     }
     else if (l->cmd->parm2Addressing3 != NULL) {
         addressingCode2 = 3;

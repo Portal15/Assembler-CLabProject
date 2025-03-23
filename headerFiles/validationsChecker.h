@@ -4,7 +4,7 @@
 
 #include "dataTypes.h"
 
-/* This function checks if the line has any errors that didnt found in the inputAnalizer.
+/* This function checks if the line has any errors that didnt found in the inputAnalyzer.
  * l - the line to be checked
  * return - 1 if there is an error, 0 otherwise
  */

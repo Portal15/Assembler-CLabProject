@@ -2,9 +2,13 @@
 #include "headerFiles/utils.h"
 #include "headerFiles/dataTypes.h"
 
-var* varDupe(var *v);
+/* This function act like strdup but for var structs.
+ * v - the var that will be duped
+ * return - pointer to the new duped var.
+ */
+var* varDupe(const var *v);
 
-void addLineToObjectTable(line *l, objectTable *ot) {
+void addLineToObjectTable(const line *l, objectTable *ot) {
     if(l->label != NULL) {
         /* Handle commands */
         if(l->cmd != NULL) {
@@ -176,38 +180,38 @@ objectTable* createObjectTable() {
     return ot;
 }
 
-void fillAddresses(objectTable* ot, int* invisibleLineNum, int lineNum) {
+void fillAddresses(const objectTable* ot, const int* address, const int lineNum) {
     objectTableCommands* command = ot->commands;
     objectTableData* data = ot->data;
     objectTableExtern* ext = ot->externs;
     objectTableEntry* entry = ot->entries;
     while (entry != NULL) {
         if (entry->line == lineNum) {
-            entry->address = *invisibleLineNum;
+            entry->address = *address;
         }
         entry = entry->next;
     }
     while (ext != NULL) {
         if (ext->line == lineNum) {
-            ext->address = *invisibleLineNum;
+            ext->address = *address;
         }
         ext = ext->next;
     }
     while (data != NULL) {
         if (data->line == lineNum) {
-            data->address = *invisibleLineNum;
+            data->address = *address;
         }
         data = data->next;
     }
     while (command != NULL) {
         if (command->line == lineNum) {
-            command->address = *invisibleLineNum;
+            command->address = *address;
         }
         command = command->next;
     }
 }
 
-int checkForDoubles(objectTable* ot) {
+int checkForDoubles(const objectTable* ot) {
     objectTableEntry* entry = ot->entries;
     objectTableExtern* ext = ot->externs;
     objectTableData* data = ot->data;
@@ -254,7 +258,7 @@ int checkForDoubles(objectTable* ot) {
 
 }
 
-var* varDupe(var *v) {
+var* varDupe(const var *v) {
     if (v == NULL) return NULL;
 
     var* newVar = (var*)malloc(sizeof(var));
