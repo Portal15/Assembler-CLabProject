@@ -1,6 +1,11 @@
 #ifndef DATATYPES_H
 #define DATATYPES_H
 
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 typedef struct command {
     char *name;
     /* for parm1 */

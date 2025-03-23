@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "headerFiles/lineAnalyzer.h"
-#include "headerFiles/Validations.h"
+#include "headerFiles/inputAnalyzer.h"
+#include "headerFiles/validationsChecker.h"
 #include "headerFiles/binaryConvertor.h"
 #include "headerFiles/objectTableAnalyzer.h"
 #include "headerFiles/second.h"
@@ -83,9 +83,9 @@ void runOnFile(char* fileName) {
         line l;
         fgets(input, MAX_LINE_LENGTH, fileAM);
         if (isSentence(input)) {
-            l = analyzeLine(input, i, ot);
+            l = analyzeInput(input, i);
 
-            isValid = checkLineValidation(&l, forbiddenWords) == 1 ? isValid : 0;
+            isValid = checkInputValidation(&l, forbiddenWords) == 1 ? isValid : 0;
             isValid = checkLabelErrors(*ot, &l) == 1 ? isValid : 0;
             if (!isValid) {
                 error = 1;

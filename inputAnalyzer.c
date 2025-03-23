@@ -1,23 +1,51 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include "headerFiles/lineAnalyzer.h"
+#include "headerFiles/inputAnalyzer.h"
 #include "headerFiles/errorHandler.h"
-#include "headerFiles/utils.h"
 
 /* Function prototypes */
-char *removeSpacesUntilChar(char *line);
-char *getStringUntilNonLetterChar(char *str);
-char *removeUntilNonLetter(char *str);
-int isEndOfString(const char *str);
-void freeCommand(command *cmd);
-void addDigitToVar(var *v, char* digit);
-void addLetterToVar(var *v, char letter);
-char *getStringUntilNonQuotationMarks(char *str);
-void freeVar(var *v);
 
-line analyzeLine(char *inputedLine, int lineNum, objectTable *ot) {
+/* This function removes leading spaces from a string until a non-space character is found.
+ * line - the string to be processed
+ * return - a pointer to the first non-space character in the string
+ */
+char *removeSpacesUntilChar(char *line);
+
+/* This function gets a string and returns a pointer until the first non-letter character in the string.
+ * str - the string to be processed
+ * return - a pointer until the first non-letter character in the string
+ */
+char *getStringUntilNonLetterChar(const char *str);
+
+/* This function removes leading spaces from a string until a non-letter character is found.
+ * str - the string to be processed
+ * return - a pointer to the first non-letter character in the string
+ */
+char *removeUntilNonLetter(char *str);
+
+/* This function checks if a string is empty.
+ * str - the string to be checked
+ * return - 1 if the string is empty, 0 otherwise
+ */
+int isEndOfString(const char *str);
+
+/* This function adds a digit to a var struct.
+ * v - the var struct to be updated
+ * digit - the digit to be added
+ */
+void addDigitToVar(var *v, char* digit);
+
+/* This function adds a letter to a var struct.
+ * v - the var struct to be updated
+ * letter - the letter to be added
+ */
+void addLetterToVar(var *v, char letter);
+
+/* This function gets a string and returns a pointer until the first non-quotation mark character in the string.
+ * str - the string to be processed
+ * return - a pointer until the first non-quotation mark character in the string
+ */
+char *getStringUntilNonQuotationMarks(const char *str);
+
+line analyzeInput(char *inputedLine, int lineNum) {
     line newLine;
     char *label = NULL;
     command *cmd = NULL;
@@ -554,7 +582,7 @@ char *removeSpacesUntilChar(char *line) {
     return line;
 }
 
-char *getStringUntilNonLetterChar(char *str) {
+char *getStringUntilNonLetterChar(const char *str) {
     char *string = malloc(sizeof(char) * MAX_SIZE_OF_STRING);
     char *start;
 
@@ -572,7 +600,7 @@ char *getStringUntilNonLetterChar(char *str) {
     return string;
 }
 
-char *getStringUntilNonQuotationMarks(char *str) {
+char *getStringUntilNonQuotationMarks(const char *str) {
     char *string = malloc(sizeof(char) * MAX_SIZE_OF_STRING);
     char *start;
 
@@ -660,7 +688,7 @@ void addDigitToVar(var *v, char* digit) {
     v->next->next = NULL;
 }
 
-void addLetterToVar(var *v, char letter) {
+void addLetterToVar(var *v, const char letter) {
     if (v == NULL) return;
 
     while (v->next != NULL) {

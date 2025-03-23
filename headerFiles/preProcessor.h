@@ -1,10 +1,9 @@
 #ifndef PRE_PROCESSOR_H
 #define PRE_PROCESSOR_H
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "headerFiles/errorHandler.h"
+#include "headerFiles/inputAnalyzer.h"
+#include "headerFiles/utils.h"
 #define MAX_LINE_LENGTH 81
 
 /* This function is the main function of the preprocessor.

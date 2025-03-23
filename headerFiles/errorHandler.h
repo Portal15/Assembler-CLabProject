@@ -1,8 +1,6 @@
 #ifndef ERROR_HANDLER_H
 #define ERROR_HANDLER_H
 
-#include <stdio.h>
-
 /* General Errors */
 #define MEMORY_ALLOCATION_ERROR 1
 #define FAILED_TO_OPEN_FILE_ERROR 2

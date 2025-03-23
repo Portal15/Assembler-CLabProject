@@ -1,5 +1,6 @@
 #include "headerFiles/utils.h"
 #include "headerFiles/errorHandler.h"
+#include "headerFiles/dataTypes.h"
 
 char *strdup(const char *s) {
     size_t len;

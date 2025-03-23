@@ -7,8 +7,8 @@ add_executable(Maman14Project
         main.c
         preProcessor.c
         errorHandler.c
-        lineAnalyzer.c
-        Validations.c
+        inputAnalyzer.c
+        validationsChecker.c
         objectTableAnalyzer.c
         second.c
         binaryConvertor.c

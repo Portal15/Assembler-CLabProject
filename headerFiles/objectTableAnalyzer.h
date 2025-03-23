@@ -11,6 +11,4 @@ void fillAddresses(objectTable* ot, int* invisibleLineNum, int lineNum);
 
 int checkForDoubles(objectTable* ot);
 
-void freeVar(var *v);
-
 #endif

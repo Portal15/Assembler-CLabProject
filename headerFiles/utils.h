@@ -29,4 +29,4 @@ int countLinesInFile(const char *fileName);
 int isSentence(const char *input);
 
 
-#endif // UTILS_H
+#endif

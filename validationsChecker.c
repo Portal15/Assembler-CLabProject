@@ -1,17 +1,47 @@
-#include "headerFiles/lineAnalyzer.h"
+#include "headerFiles/inputAnalyzer.h"
 #include "headerFiles/utils.h"
 #include "headerFiles/errorHandler.h"
 #include "headerFiles/dataTypes.h"
 
+/* This function checks if a string is a number.
+ * str - the string to be checked
+ * return - 1 if the string is a number, 0 otherwise
+ */
 int isNumber(const char *str);
+
+/* This function checks if a string is a letter and \0.
+ * str - the string to be checked
+ * return - 1 if the string is a letter, 0 otherwise
+ */
 int isLetter(const char *str);
+
+/* This function checks if a string is a register.
+ * str - the string to be checked
+ * return - 1 if the string is a register, 0 otherwise
+ */
 int isRegister(const char *str);
-int checkLineAnalyzerErrors(line *l);
-int inCommandCheck(command *cmd, char *forbiddenWords);
+
+/* This function checks if there are any errors that found in the inputAnalyzer but not reported.
+ * l - the line to be checked
+ * return - 1 if there is an error, 0 otherwise
+ */
+int checkInputAnalyzerErrors(const line *l);
+
+/* This function checks if the command is valid (like the parameters type and the name).
+ * cmd - the command to be checked
+ * return - 1 if there is an error, 0 otherwise
+ */
+int inCommandCheck(const command *cmd);
+
+/* This function checks if the parameter type is allowed.
+ * allowedTypes - the allowed types
+ * type - the type to be checked
+ * return - 1 if the type is allowed, 0 otherwise
+ */
 int checkIsAllowed(const int allowedTypes[], int type);
 
-int checkLineValidation(line *l, char *forbiddenWords){
-    if (checkLineAnalyzerErrors(l)){ /* The error was already act in the other file */
+int checkInputValidation(line *l, char *forbiddenWords){
+    if (checkInputAnalyzerErrors(l)){ /* The error was already act in the other file */
         return 0;
     }
 
@@ -21,7 +51,7 @@ int checkLineValidation(line *l, char *forbiddenWords){
     }
 
     if (l->cmd != NULL) {
-        if (inCommandCheck(l->cmd, forbiddenWords) == 0) {
+        if (inCommandCheck(l->cmd) == 0) {
             printErrorMsg(INVALID_COMMAND_ERROR, l->lineNum);
             return 0;
         }
@@ -108,7 +138,7 @@ int checkLineValidation(line *l, char *forbiddenWords){
 
 }
 
-int inCommandCheck(command *cmd, char *forbiddenWords) {
+int inCommandCheck(const command *cmd) {
     struct commands {
         const char *name;
         int parm1AllowedTypes[4];
@@ -146,7 +176,7 @@ int inCommandCheck(command *cmd, char *forbiddenWords) {
     return 0;
 }
 
-int checkIsAllowed(const int allowedTypes[], int type) {
+int checkIsAllowed(const int allowedTypes[], const int type) {
     int i = 0;
     while (i < 4 && allowedTypes[i] != -2) {
         if (allowedTypes[i] == type) {
@@ -157,9 +187,9 @@ int checkIsAllowed(const int allowedTypes[], int type) {
     return 0;
 }
 
-int checkLabelErrors(objectTable ot, line *l) {
+int checkLabelErrors(const objectTable ot, const line *l) {
     if (l->label != NULL) {
-        objectTableCommands *temp = ot.commands;
+        const objectTableCommands *temp = ot.commands;
         if (temp != NULL && strcmp(temp->name, l->label) == 0) {
             printErrorMsg(LABEL_NAME_APPEAR_TWICE_ERROR, l->lineNum);
             return 0;
@@ -172,7 +202,7 @@ int checkLabelErrors(objectTable ot, line *l) {
             }
         }
         /* Second Time */
-        objectTableData *temp1 = ot.data;
+        const objectTableData *temp1 = ot.data;
         if (temp1 != NULL && strcmp(temp1->name, l->label) == 0) {
             printErrorMsg(LABEL_NAME_APPEAR_TWICE_ERROR, l->lineNum);
             return 0;
@@ -188,7 +218,7 @@ int checkLabelErrors(objectTable ot, line *l) {
     return 1;
 }
 
-int checkObjectTableErrors(objectTable ot) {
+int checkObjectTableErrors(const objectTable ot) {
     if (ot.error[0] == MEMORY_ALLOCATION_ERROR) {
         printErrorMsg(MEMORY_ALLOCATION_ERROR, ot.error[1]);
         return 0;
@@ -196,7 +226,7 @@ int checkObjectTableErrors(objectTable ot) {
     return 1;
 }
 
-int checkLineAnalyzerErrors(line *l) {
+int checkInputAnalyzerErrors(const line *l) {
     int error;
     for (error = ILLEGAL_COMMA_ERROR; error <= INVALID_PARAMETER_NOT_A_STRING_ERROR; error++) {
         if (l->error == error) {
