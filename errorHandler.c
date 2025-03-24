@@ -2,7 +2,8 @@
 #include <stdio.h>
 
 
-void printErrorMsg(const int errorType, const int lineNum){
+void printErrorMsg(const int errorType, int lineNum){
+    lineNum -= 100;
     switch(errorType){
         case MEMORY_ALLOCATION_ERROR:
             if(lineNum != -1){

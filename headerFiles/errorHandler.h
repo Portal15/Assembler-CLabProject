@@ -34,6 +34,6 @@
  * errorType - the type of the error
  * lineNum - the line number of the error
  */
-void printErrorMsg(const int errorType, const int lineNum);
+void printErrorMsg(const int errorType, int lineNum);
 
 #endif

@@ -100,6 +100,10 @@ char *preProcessor(const char *fileName, char *forbiddenWords) {
     }
     while (fgets(line, MAX_LINE_LENGTH, asFile) != NULL) {
         mcroName = isStartOfMcro(line, forbiddenWords, &createNewFile, lineNum);
+        if (mcroName != NULL && strcmp(mcroName, "\0\0") == 0) {
+            remove(newFileName);
+            return NULL;
+        }
         if (mcroName != NULL) {
             int inMcro = 1;
             linkedListOfMcros *newMcro;
@@ -118,8 +122,13 @@ char *preProcessor(const char *fileName, char *forbiddenWords) {
             strcpy(mcroData, "");
 
             while (inMcro && fgets(line, MAX_LINE_LENGTH, asFile) != NULL) {
+                int temp = isEndOfMcro(line, &createNewFile, lineNum);
+                if (temp == -1) {
+                    remove(newFileName);
+                    return NULL;
+                }
                 lineNum++;
-                if (isEndOfMcro(line, &createNewFile, lineNum)) {
+                if (temp) {
                     inMcro = 0;
                 } else {
                     char *newMcroData;
@@ -204,7 +213,7 @@ char *isStartOfMcro(const char *line, char *forbiddenWords, int *createNewFile, 
     if (originalLineCopy == NULL) {
         printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
         *createNewFile = 0;
-        return NULL;
+        return "\0\0";
     }
     strcpy(originalLineCopy, line);
     lineCopy = originalLineCopy;
@@ -241,10 +250,10 @@ char *isStartOfMcro(const char *line, char *forbiddenWords, int *createNewFile, 
         *createNewFile = 0;
     }
     if (*start == '\0' || isForbiddenWord(start, forbiddenWords)) {
-        printErrorMsg(INVALID_MACRO_ERROR, lineNum);
+        printErrorMsg(INVALID_MACRO_ERROR, lineNum + 100);
         free(originalLineCopy);
         *createNewFile = 0;
-        return NULL;
+        return "\0\0";
     }
 
     lineCopy = end + 1;
@@ -253,10 +262,10 @@ char *isStartOfMcro(const char *line, char *forbiddenWords, int *createNewFile, 
     }
 
     if (*lineCopy && *lineCopy != '\n') {
-        printErrorMsg(UNEXPECTED_TEXT_AFTER_MACRO_ERROR, lineNum);
+        printErrorMsg(UNEXPECTED_TEXT_AFTER_MACRO_ERROR, lineNum + 100);
         free(originalLineCopy);
         *createNewFile = 0;
-        return NULL;
+        return "\0\0";
     }
 
     mcroName = (char *)malloc(strlen(start) + 1);
@@ -264,7 +273,7 @@ char *isStartOfMcro(const char *line, char *forbiddenWords, int *createNewFile, 
         printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
         free(originalLineCopy);
         *createNewFile = 0;
-        return NULL;
+        return "\0\0";
     }
     strcpy(mcroName, start);
 
@@ -282,7 +291,7 @@ int isEndOfMcro(const char *line, int *createNewFile, int lineNum) {
     if (originalLineCopy == NULL) {
         printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
         *createNewFile = 0;
-        return 0;
+        return -1;
     }
     strcpy(originalLineCopy, line);
     lineCopy = originalLineCopy;
@@ -303,9 +312,9 @@ int isEndOfMcro(const char *line, int *createNewFile, int lineNum) {
     }
     token = strtok(NULL, " ");
     if (token != NULL) {
-        printErrorMsg(UNEXPECTED_TEXT_AFTER_MACROEND_ERROR, lineNum);
+        printErrorMsg(UNEXPECTED_TEXT_AFTER_MACROEND_ERROR, lineNum + 100);
         *createNewFile = 0;
-        result = 0;
+        result = -1;
     } else {
         result = 1;
     }

@@ -73,6 +73,7 @@ void runOnFile(char* fileName) {
     }
     numOfLines = countLinesInFile(fileNameAM) + address;
     list->data = NULL;
+    list->next = NULL;
     for (lineNum = address; lineNum < numOfLines; lineNum++) { /* This for loop presents the first pass */
 	    i = lineNum;
         char* input = malloc(sizeof(char) * 100);
@@ -119,6 +120,7 @@ void runOnFile(char* fileName) {
 
     externs = malloc(sizeof(externsAppearance));
     externs->name = NULL;
+    externs->next = NULL;
     if (SecondPass(list, ot, externs) && !error) { /* This function presents the second pass */
        error = 1;
     }
