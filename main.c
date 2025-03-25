@@ -12,11 +12,23 @@
 #include "headerFiles/utils.h"
 
 #define NUM_OF_DASHES 40
+#define MAX_FILE_NAME 256
+#define STARTED_ADDRESS 100
+#define FORBIDDEN_WORDS "mov\ncmp\nadd\nsub\nlea\nclr\nnot\ninc\ndec\njmp\nbne\njsr\nred\nprn\nrts\nstop\nr1\nr2\nr3\nr4\nr5\nr6\nr7\nr8\n"
 
+/* This function runs the program (the all passes and the other stuff) on an inputed file
+ * fileName - the name of the file to be run
+ */
 void runOnFile(char* fileName);
 
+/* This function frees all of the object table, the externs and the binary list.
+ * ot - the object table
+ * externs - the externs
+ * list - the binary list
+ */
 void freeAll(objectTable *ot, externsAppearance *externs, binaryConvertedLines *list);
-void freeLine(line *l);
+
+void freeLine(const line *l);
 
 int main(int argc, char** argv) {
     int i;
@@ -41,13 +53,14 @@ int main(int argc, char** argv) {
 
 
 void runOnFile(char* fileName) {
-    char fileNameAM[256];
+    char fileNameAM[MAX_FILE_NAME];
     FILE *fileAM;
     objectTable *ot = createObjectTable();
     binaryConvertedLines *list = malloc(sizeof(binaryConvertedLines));
-    int address = 100, tempAddress = address, dataWithNoLabel = 0, error = 0, i = 0, numOfLines = 0, lineNum = 0;
+    int address = STARTED_ADDRESS, tempAddress = address, dataWithNoLabel = 0, error = 0, i = 0, numOfLines = 0, lineNum = 0;
 
-    char* firstForbiddenWords = "mov\ncmp\nadd\nsub\nlea\nclr\nnot\ninc\ndec\njmp\nbne\njsr\nred\nprn\nrts\nstop\nr1\nr2\nr3\nr4\nr5\nr6\nr7\nr8\n";
+    char* firstForbiddenWords = FORBIDDEN_WORDS;
+
     /* Preprocessor */
     char* macros = preProcessor(fileName, firstForbiddenWords);
     if (macros == NULL) {
@@ -56,6 +69,7 @@ void runOnFile(char* fileName) {
     }
     printf("-V-     after macro file successfully created\n");
     /* End of Preprocessor */
+
     externsAppearance *externs;
     char *forbiddenWords = malloc(strlen(firstForbiddenWords) + strlen(macros) + 1);
     if (forbiddenWords == NULL) {
@@ -65,7 +79,7 @@ void runOnFile(char* fileName) {
     strcpy(forbiddenWords, firstForbiddenWords);
     strcat(forbiddenWords, macros);
 
-    CreateFileName(fileName, fileNameAM, 3);
+    CreateFileName(fileName, fileNameAM, FILE_TYPE_AFTER_MACRO);
     fileAM = fopen(fileNameAM, "r");
     if (fileAM == NULL) {
         printErrorMsg(FAILED_TO_OPEN_FILE_ERROR, -1);
@@ -76,7 +90,7 @@ void runOnFile(char* fileName) {
     list->next = NULL;
     for (lineNum = address; lineNum < numOfLines; lineNum++) { /* This for loop presents the first pass */
 	    i = lineNum;
-        char* input = malloc(sizeof(char) * 100);
+        char* input = malloc(sizeof(char) * MAX_LINE_LENGTH);
         int isValid = 1;
         line l;
         fgets(input, MAX_LINE_LENGTH, fileAM); /* Gets the input from the file */
@@ -185,7 +199,7 @@ void freeAll(objectTable *ot, externsAppearance *externs, binaryConvertedLines *
     free(ot);
 }
 
-void freeLine(line *l) {
+void freeLine(const line *l) {
     if (l == NULL) return;
     if (l->label != NULL) free(l->label);
     if (l->cmd != NULL) {

@@ -54,7 +54,7 @@
 
     /* Handle extern file */
     if (externs->next) {
-        CreateFileName(file, obFileName, 2);
+        CreateFileName(file, obFileName, FILE_TYPE_EXTERN);
         obFile = fopen(obFileName, "w");
 
 
@@ -84,7 +84,7 @@
 
 
     /* Creating the name of the file with an ending of .ob */
-    CreateFileName(file, obFileName, 0);
+    CreateFileName(file, obFileName, FILE_TYPE_OBJECT);
 
     /* Creating the .ob file */
     obFile = fopen(obFileName, "w");
@@ -112,7 +112,7 @@
 
     /* Handle entry file */
     if (entry) {
-        CreateFileName(file, obFileName, 1);
+        CreateFileName(file, obFileName, FILE_TYPE_ENTRY);
         obFile = fopen(obFileName, "w");
 
     	/* Return error if the file couldn't be created */
@@ -140,17 +140,17 @@ void CreateFileName(char* file, char* obFile, int fileType) {
     /* copying the file name into a buffer and changing the copies' ending to .ob */
     strcpy(obFile, file);
     dot = strrchr(obFile, '.');
-    if(fileType == 0) {
+    if(fileType == FILE_TYPE_OBJECT) {
 		*++dot = 'o';
 		*++dot = 'b';
 		*++dot = '\0';
     }
-    else if(fileType == 1) {
+    else if(fileType == FILE_TYPE_ENTRY) {
 		*++dot = 'e';
 		*++dot = 'n';
 		*++dot = 't';
 		*++dot = '\0';
-    } else if (fileType == 3) {
+    } else if (fileType == FILE_TYPE_AFTER_MACRO) {
 		*++dot = 'a';
     	*++dot = 'm';
     	*++dot = '\0';

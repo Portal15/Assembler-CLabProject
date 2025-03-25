@@ -3,6 +3,10 @@
 
 #include "dataTypes.h"
 
+#define FILE_TYPE_ENTRY 1
+#define FILE_TYPE_EXTERN 2
+#define FILE_TYPE_OBJECT 0
+#define FILE_TYPE_AFTER_MACRO 3
 
 /*
  * this function creates a the .ob, .ent and .ext files with the name of the given file and in the .ob file
@@ -10,7 +14,7 @@
  * of line next to every line of code and data translated to machine language. in the .ent it writes 
  * every entry label next to its line, and in the .ext it writes every extern label next to every line it is being shown.
  * the function gets 3 parameters:
- * list - a linked list that containes the code after it was converted to machine language in hexa.
+ * list - a linked list that contains the code after it was converted to machine language in hexa.
  * ob - the object table.
  * file - the name of the file that the function will create the .ob file based on
  * the function assumes that the file name is fixed since it wouldnt have been called otherwise.

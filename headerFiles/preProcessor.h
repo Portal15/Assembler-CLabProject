@@ -5,6 +5,7 @@
 #include "headerFiles/inputAnalyzer.h"
 #include "headerFiles/utils.h"
 #define MAX_LINE_LENGTH 81
+#define ERROR_IN_MACRO_NAME "\0\0"
 
 /* This function is the main function of the preprocessor.
  * It reads the file line by line and processes the macros.
