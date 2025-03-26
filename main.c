@@ -67,6 +67,7 @@ void runOnFile(char* fileName) {
     char* macros = preProcessor(fileName, firstForbiddenWords);
     if (macros == NULL) {
         printf("-X-     failed to create macro file\n");
+        freeAll(ot, NULL, list);
         return;
     }
     printf("-V-     after macro file successfully created\n");
@@ -76,6 +77,7 @@ void runOnFile(char* fileName) {
     char *forbiddenWords = malloc(strlen(firstForbiddenWords) + strlen(macros) + 1);
     if (forbiddenWords == NULL) {
         printErrorMsg(MEMORY_ALLOCATION_ERROR, -1);
+        freeAll(ot, NULL, list);
         return;
     }
     strcpy(forbiddenWords, firstForbiddenWords);
@@ -85,6 +87,8 @@ void runOnFile(char* fileName) {
     fileAM = fopen(fileNameAM, "r");
     if (fileAM == NULL) {
         printErrorMsg(FAILED_TO_OPEN_FILE_ERROR, -1);
+        freeAll(ot, NULL, list);
+        free(forbiddenWords);
         return;
     }
     numOfLines = countLinesInFile(fileNameAM) + address;
