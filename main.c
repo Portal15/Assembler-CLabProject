@@ -22,10 +22,10 @@
 void runOnFile(char* fileName);
 
 /* This function frees all of the object table, the externs and the binary list.
- * ot - the object table
- * externs - the externs
- * list - the binary list
- */
+  * ot - the object table
+  * externs - the externs
+  * list - the binary list
+  */
 void freeAll(objectTable *ot, externsAppearance *externs, binaryConvertedLines *list);
 
 void freeLine(const line *l);
@@ -57,8 +57,10 @@ void runOnFile(char* fileName) {
     FILE *fileAM;
     objectTable *ot = createObjectTable();
     binaryConvertedLines *list = malloc(sizeof(binaryConvertedLines));
+    list->data = NULL;
+    list->next = NULL;
     int address = STARTED_ADDRESS, tempAddress = address, dataWithNoLabel = 0, error = 0, i = 0, numOfLines = 0, lineNum = 0;
-
+ 
     char* firstForbiddenWords = FORBIDDEN_WORDS;
 
     /* Preprocessor */
@@ -86,8 +88,6 @@ void runOnFile(char* fileName) {
         return;
     }
     numOfLines = countLinesInFile(fileNameAM) + address;
-    list->data = NULL;
-    list->next = NULL;
     for (lineNum = address; lineNum < numOfLines; lineNum++) { /* This for loop presents the first pass */
 	    i = lineNum;
         char* input = malloc(sizeof(char) * MAX_LINE_LENGTH);
@@ -140,7 +140,7 @@ void runOnFile(char* fileName) {
     }
     if (!error) {
         CreateFiles(list, fileNameAM, ot, externs, dataWithNoLabel);
-    }else {
+    }else {      
         printf("-X-     failed to create files because previous errors\n");
     }
 

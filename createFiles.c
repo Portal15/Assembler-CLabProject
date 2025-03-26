@@ -10,21 +10,20 @@
  * with an ending of .ob or .ent or .ext
  * the function gets 3 parameters:
  * file - the file name that we want to copy
- * obFile - the buffer that will hold the copied file name with the desired ending
+ * fileName - the buffer that will hold the copied file name with the desired ending
  * fileType - the integer that will decide which ending is going to be.
  * the function assumes that the file name is fixed (it has a .txt ending) since it wouldnt have been called otherwise.
  */
 
 
- void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, externsAppearance *externs, int dataWithNoLabel) {
-    FILE *obFile;
-    int counter = 100;
+ void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, externsAppearance *externsAppearances, int dataWithNoLabel) {
+    FILE *fileName;
+    int lineCounter = 100;
     int invisLineCounter = 100;
-    char obFileName[256];
+    char FileNameString[256];
     objectTableEntry *entry = ob->entries;
-    objectTableExtern *ext = ob->externs;
     binaryConvertedLines *current = list;
-    binaryConvertedLines *templine;
+    binaryConvertedLines *lineCounterList = list;
     objectTableData *data = ob->data;
     var *value;
     int dataLines = dataWithNoLabel;
@@ -32,91 +31,93 @@
     int totalLines = 0;
     int codeLines;
 
-    /* Count data lines */
-    while (data) {
-        value = data->value;
-        while (value) {
-            dataLines++;
-            value = value->next;
-        }
-        data = data->next;
-    }
-
-    /* Count total lines */
-    templine = current;
-    while (templine) {
-        totalLines++;
-        templine = templine->next;
-    }
-
-    codeLines = totalLines - dataLines;
-
 
     /* Handle extern file */
-    if (externs->next) {
-        CreateFileName(file, obFileName, FILE_TYPE_EXTERN);
-        obFile = fopen(obFileName, "w");
+    if (externsAppearances->next) {
+        CreateFileName(file, FileNameString, FILE_TYPE_EXTERN);
+        fileName = fopen(FileNameString, "w");
 
 
 		/* Return error if the file couldn't be created */
-		if (obFile == NULL) {
+		if (fileName == NULL) {
 			printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
 			return;
 		}
     	printf("-V-     externs file successfully created\n");
 
 
-		externs = externs->next;
+		externsAppearances = externsAppearances->next;
 
-        while (externs && current) {
+        while (externsAppearances && current) {
 	    if(current->data && strlen(current->data) >= 6 && current->data[0] == '0' && current->data[1] == '0' && current->data[2] == '0' && current->data[3] == '0' && current->data[4] == '0' && current->data[5] == '1') {
-        	fprintf(obFile, "%s %07d\n", externs->name, invisLineCounter);
-		if (externs->next != NULL) {
-		    externs = externs->next;
+        	fprintf(fileName, "%s %07d\n", externsAppearances->name, invisLineCounter);
+		if (externsAppearances->next != NULL) {
+		    externsAppearances = externsAppearances->next;
 		}
 	    }
 	    invisLineCounter++;
 	    current = current->next;
         }
 
-        fclose(obFile);
+        fclose(fileName);
     }
 
 
     /* Creating the name of the file with an ending of .ob */
-    CreateFileName(file, obFileName, FILE_TYPE_OBJECT);
+    if(list && list->data) {
 
-    /* Creating the .ob file */
-    obFile = fopen(obFileName, "w");
+	/* Count data lines */
+    	while (data) {
+        	value = data->value;
+        	while (value) {
+        	    dataLines++;
+        	    value = value->next;
+        	}
+        	data = data->next;
+    	}
+
+    	/* Count total lines */
+    	while (lineCounterList && lineCounterList->data) {
+        	totalLines++;
+        	lineCounterList = lineCounterList->next;
+    	}
+
+    	codeLines = totalLines - dataLines;
+	CreateFileName(file, FileNameString, FILE_TYPE_OBJECT);
+
+	    /* Creating the .ob file */
+	fileName = fopen(FileNameString, "w");
 
 
 
-    /* Return error if the file couldn't be created */
-    if (obFile == NULL) {
-        printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
-		return;
+	/* Return error if the file couldn't be created */
+	if (fileName == NULL) {
+	    printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
+	    return;
+	}
+	printf("-V-     object file successfully created\n");
+
+	if(codeLines || dataLines) {
+	    fprintf(fileName, "%6d %d\n", codeLines, dataLines);
+	}
+
+	/* Writing data */
+	while (list && list->data) {
+	    fprintf(fileName, "%07d %s\n", lineCounter, list->data);
+	    lineCounter++;
+	    list = list->next;
+	}
+
+	fclose(fileName);
     }
- 	printf("-V-     object file successfully created\n");
-
-
-    fprintf(obFile, "%6d %d\n", codeLines, dataLines);
-
-    /* Writing data */
-    while (list) {
-        fprintf(obFile, "%07d %s\n", counter, list->data);
-        counter++;
-	list = list->next;
-    }
-
-    fclose(obFile);
 
     /* Handle entry file */
     if (entry) {
-        CreateFileName(file, obFileName, FILE_TYPE_ENTRY);
-        obFile = fopen(obFileName, "w");
+        CreateFileName(file, FileNameString, FILE_TYPE_ENTRY);
+        fileName = fopen(FileNameString, "w");
 
     	/* Return error if the file couldn't be created */
-		if (obFile == NULL) {
+		if (fileName == NULL) {
 			printErrorMsg(FAILED_TO_CREATE_FILE_ERROR, -1);
 			return;
 		}
@@ -125,33 +126,33 @@
 
 
         while (entry) {
-            fprintf(obFile, "%s %07d\n", entry->name, entry->address);
+            fprintf(fileName, "%s %07d\n", entry->name, entry->address);
 	    entry = entry->next;
         }
 
-        fclose(obFile);
+        fclose(fileName);
     }
 }
 
   
-void CreateFileName(char* file, char* obFile, int fileType) {
+void CreateFileName(char* file, char* fileName, int fileType) {
     char* dot;
    
     /* copying the file name into a buffer and changing the copies' ending to .ob */
-    strcpy(obFile, file);
-    dot = strrchr(obFile, '.');
+    strcpy(fileName, file);
+    dot = strrchr(fileName, '.');
     if(fileType == FILE_TYPE_OBJECT) {
-		*++dot = 'o';
-		*++dot = 'b';
-		*++dot = '\0';
+	*++dot = 'o';
+	*++dot = 'b';
+	*++dot = '\0';
     }
     else if(fileType == FILE_TYPE_ENTRY) {
-		*++dot = 'e';
-		*++dot = 'n';
-		*++dot = 't';
-		*++dot = '\0';
+	*++dot = 'e';
+	*++dot = 'n';
+	*++dot = 't';
+	*++dot = '\0';
     } else if (fileType == FILE_TYPE_AFTER_MACRO) {
-		*++dot = 'a';
+	*++dot = 'a';
     	*++dot = 'm';
     	*++dot = '\0';
     }else {

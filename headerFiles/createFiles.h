@@ -22,6 +22,15 @@
  */
 void CreateFiles(binaryConvertedLines *list, char* file, objectTable *ob, externsAppearance *externs, int dataWithNoLabel);
 
+/*
+ * this function gets a file name and a buffer and its copying the file name into the buffer
+ * with an ending of .ob or .ent or .ext
+ * the function gets 3 parameters:
+ * file - the file name that we want to copy
+ * fileName - the buffer that will hold the copied file name with the desired ending
+ * fileType - the integer that will decide which ending is going to be.
+ * the function assumes that the file name is fixed (it has a .txt ending) since it wouldnt have been called otherwise.
+ */
 void CreateFileName(char* file, char* obFile, int fileType);
 
 #endif
