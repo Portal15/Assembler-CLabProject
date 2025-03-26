@@ -5,7 +5,7 @@
 #include "headerFiles/validationsChecker.h"
 #include "headerFiles/binaryConvertor.h"
 #include "headerFiles/objectTableAnalyzer.h"
-#include "headerFiles/second.h"
+#include "headerFiles/secondPass.h"
 #include "headerFiles/createFiles.h"
 #include "headerFiles/errorHandler.h"
 #include "headerFiles/preProcessor.h"
@@ -135,7 +135,7 @@ void runOnFile(char* fileName) {
     externs = malloc(sizeof(externsAppearance));
     externs->name = NULL;
     externs->next = NULL;
-    if (SecondPass(list, ot, externs) && !error) { /* This function presents the second pass */
+    if (secondPass(list, ot, externs) && !error) { /* This function presents the second pass */
        error = 1;
     }
     if (!error) {

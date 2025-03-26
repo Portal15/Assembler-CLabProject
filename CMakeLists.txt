@@ -9,8 +9,8 @@ add_executable(Maman14Project
         errorHandler.c
         inputAnalyzer.c
         validationsChecker.c
+        secondPass.c
         objectTableAnalyzer.c
-        second.c
         binaryConvertor.c
         createFiles.c
         utils.c

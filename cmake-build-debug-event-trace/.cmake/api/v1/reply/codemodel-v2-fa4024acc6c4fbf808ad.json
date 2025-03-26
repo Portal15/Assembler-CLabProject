@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "Maman14Project::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Maman14Project-Debug-0b695d0366ec48e6f88b.json",
+					"jsonFile" : "target-Maman14Project-Debug-cfa2e7a218484f0dabe6.json",
 					"name" : "Maman14Project",
 					"projectIndex" : 0
 				}
@@ -49,7 +49,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/yonatanbenyehuda/Desktop/Computer Science/University/C/Course20465/CLabProject/cmake-build-debug",
+		"build" : "/Users/yonatanbenyehuda/Desktop/Computer Science/University/C/Course20465/CLabProject/cmake-build-debug-event-trace",
 		"source" : "/Users/yonatanbenyehuda/Desktop/Computer Science/University/C/Course20465/CLabProject"
 	},
 	"version" : 

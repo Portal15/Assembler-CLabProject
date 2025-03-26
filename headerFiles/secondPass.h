@@ -22,6 +22,6 @@
  * list - the linked list of the converted lines.
  * ob - the object table.
  */
-int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *externs);
+int secondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *externs);
 
 #endif

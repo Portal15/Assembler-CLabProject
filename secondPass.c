@@ -1,6 +1,6 @@
 #include "headerFiles/errorHandler.h"
 #include "headerFiles/utils.h"
-#include "headerFiles/second.h"
+#include "headerFiles/secondPass.h"
 #include "headerFiles/dataTypes.h"
 
 /*
@@ -18,7 +18,7 @@ int IsAlpha(char ch);
 char* IntToHex(int address);
 
 
-int SecondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *externsAppearances) {
+int secondPass(binaryConvertedLines *list, objectTable *ob, externsAppearance *externsAppearances) {
     binaryConvertedLines *current = list;
     char* temp;
     int error = 0;
