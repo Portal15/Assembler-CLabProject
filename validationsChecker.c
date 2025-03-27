@@ -228,7 +228,13 @@ int checkObjectTableErrors(const objectTable ot) {
 
 int checkInputAnalyzerErrors(const line *l) {
     int error;
-    for (error = ILLEGAL_COMMA_ERROR; error <= INVALID_PARAMETER_NOT_A_STRING_ERROR; error++) {
+    for (error = ILLEGAL_COMMA_ERROR; error <= INVALID_COMMAND_ERROR; error++) {
+        if (l->error == error) {
+            printErrorMsg(error, l->lineNum);
+            return 1;
+        }
+    }
+    for (error = PARAMETER_NAME_IS_NOT_ALLOWED; error <= EMPTY_LABEL_ERROR; error++) {
         if (l->error == error) {
             printErrorMsg(error, l->lineNum);
             return 1;

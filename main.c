@@ -92,40 +92,46 @@ void runOnFile(char* fileName) {
         return;
     }
     numOfLines = countLinesInFile(fileNameAM) + address;
-    for (lineNum = address; lineNum < numOfLines; lineNum++) { /* This for loop presents the first pass */
-	    i = lineNum;
+    for (lineNum = address; lineNum < numOfLines; lineNum++) {
+        /* This for loop presents the first pass */
+        i = lineNum;
         char* input = malloc(sizeof(char) * MAX_LINE_LENGTH);
         int isValid = 1;
         line l;
         fgets(input, MAX_LINE_LENGTH, fileAM); /* Gets the input from the file */
-        if (isSentence(input)) {
-            l = analyzeInput(input, i);
+        if (strlen(input) < 81) {
+            if (isSentence(input)) {
+                l = analyzeInput(input, i);
 
-            isValid = checkInputValidation(&l, forbiddenWords) == 1 ? isValid : 0;
-            isValid = checkLabelErrors(*ot, &l) == 1 ? isValid : 0;
-            if (!isValid) {
-                error = 1;
+                isValid = checkInputValidation(&l, forbiddenWords) == 1 ? isValid : 0;
+                isValid = checkLabelErrors(*ot, &l) == 1 ? isValid : 0;
+                if (!isValid) {
+                    error = 1;
+                }
+
+                addLineToObjectTable(&l, ot);
+                isValid = checkObjectTableErrors(*ot);
+                if (!isValid) {
+                    error = 1;
+                }
+
+                isValid = binaryConvertor(&l, &address, list);
+                if (isValid) {
+                    error = 1;
+                }
+
+                if (l.label == NULL && l.vars != NULL && (l.vars->varType == 0 || l.vars->varType == 1)) {
+                    dataWithNoLabel += 1;
+                }
+
+                fillAddresses(ot, &tempAddress, i);
+                free(input);
+                freeLine(&l);
+                tempAddress = address;
             }
-
-            addLineToObjectTable(&l, ot);
-            isValid = checkObjectTableErrors(*ot);
-            if (!isValid) {
-                error = 1;
-            }
-
-            isValid = binaryConvertor(&l, &address, list);
-            if (isValid) {
-                error = 1;
-            }
-
-            if (l.label == NULL && l.vars != NULL && (l.vars->varType == 0 || l.vars->varType == 1)) {
-                dataWithNoLabel += 1;
-            }
-
-            fillAddresses(ot, &tempAddress, i);
-            free(input);
-            freeLine(&l);
-            tempAddress = address;
+        }else {
+            error = 1;
+            printErrorMsg(LINE_IS_TOO_LONG_ERROR, i);
         }
     }
     free(macros);
@@ -196,7 +202,7 @@ void freeAll(objectTable *ot, externsAppearance *externs, binaryConvertedLines *
 
     while (list) {
         binaryConvertedLines *tempLine = list->next;
-        if(list->data != NULL) free(list->data);
+        if(list->data != NULL && *list->data != '\0') free(list->data);
         free(list);
         list = tempLine;
     }

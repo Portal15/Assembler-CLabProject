@@ -102,6 +102,7 @@ line analyzeInput(char *inputedLine, int lineNum) {
         if (isEndOfString(inputedLine)) { /* Step 4.4: Check if line is empty */
             newLine.label = label;
             freeCommand(cmd);
+            newLine.error = EMPTY_LABEL_ERROR;
             return newLine;
         }
 

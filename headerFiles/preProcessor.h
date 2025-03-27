@@ -4,7 +4,7 @@
 #include "headerFiles/errorHandler.h"
 #include "headerFiles/inputAnalyzer.h"
 #include "headerFiles/utils.h"
-#define MAX_LINE_LENGTH 81
+#define MAX_LINE_LENGTH 100 /* it actually 80 but in the forum you said that we have to check for more than 80 so.. */
 #define ERROR_IN_MACRO_NAME "\0\0"
 
 /* This function is the main function of the preprocessor.

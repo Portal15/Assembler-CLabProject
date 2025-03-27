@@ -110,6 +110,14 @@ void printErrorMsg(const int errorType, int lineNum){
             printf("-!-     Error: Parameter name is not allowed at line %d.\n", lineNum);
             fprintf(stderr, "Error: Parameter name is not allowed at line %d.\n", lineNum);
             break;
+        case EMPTY_LABEL_ERROR:
+            printf("-!-     Error: Empty label at line %d.\n", lineNum);
+            fprintf(stderr, "Error: Empty label at line %d.\n", lineNum);
+            break;
+        case LINE_IS_TOO_LONG_ERROR:
+            printf("-!-     Error: Line is too long at line %d.\n", lineNum);
+            fprintf(stderr, "Error: Line is too long at line %d.\n", lineNum);
+            break;
         default:
             printf("-!-     Error: Unknown error\n");
             fprintf(stderr, "Error: Unknown error.\n");
