@@ -14,4 +14,38 @@
 3	201	1742813112737151898	CMakeFiles/Maman14Project.dir/inputAnalyzer.c.o	7300206e0f6dbd34
 7	64	1743023758075312599	build.ninja	da953a4f6123ca9f
 184	229	1742813112917578811	CMakeFiles/Maman14Project.dir/second.c.o	308c18e2a1864c0e
+<<<<<<< Updated upstream
 1	150	1743023745007907159	CMakeFiles/Maman14Project.dir/secondPass.c.o	8f0ba52e48007f59
+=======
+185	231	1742813112919155965	CMakeFiles/Maman14Project.dir/utils.c.o	a251b0209f145f3c
+231	340	1742813112964516331	Maman14Project	7f06cb5b1cdb019c
+3	161	1742813494920381742	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
+164	246	1742813495081948092	Maman14Project	7f06cb5b1cdb019c
+2	156	1742813672671167921	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
+157	249	1742813672825322607	Maman14Project	7f06cb5b1cdb019c
+3	151	1742813721565987723	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
+152	242	1742813721715211744	Maman14Project	7f06cb5b1cdb019c
+2	197	1742820994316154243	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
+198	306	1742820994511724815	Maman14Project	7f06cb5b1cdb019c
+2	157	1742821027362792363	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
+157	248	1742821027517411601	Maman14Project	7f06cb5b1cdb019c
+6	193	1742885398440658255	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
+7	194	1742885398441716409	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
+194	308	1742885398628545265	Maman14Project	7f06cb5b1cdb019c
+4	199	1742885672141152122	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
+202	316	1742885672339342295	Maman14Project	7f06cb5b1cdb019c
+3	193	1742886345752784552	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
+4	196	1742886345753817831	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
+196	300	1742886345945860122	Maman14Project	7f06cb5b1cdb019c
+11	292	1742982458439654576	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
+11	365	1742982458439538160	CMakeFiles/Maman14Project.dir/preProcessor.c.o	c8e952bfe8de4fea
+10	403	1742982458438666499	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
+403	572	1742982458831431813	Maman14Project	7f06cb5b1cdb019c
+>>>>>>> Stashed changes
+10	214	1743056594645442666	CMakeFiles/Maman14Project.dir/createFiles.c.o	cbfe715c55a8ddda
+8	215	1743056594644052053	CMakeFiles/Maman14Project.dir/main.c.o	d5576383caadd04b
+215	333	1743056594850563681	Maman14Project	d2af84ae3a320e50
+2	357	1743056927625579155	CMakeFiles/Maman14Project.dir/utils.c.o	a251b0209f145f3c
+357	469	1743056927980711448	Maman14Project	d2af84ae3a320e50
+6	159	1743057043361923850	CMakeFiles/Maman14Project.dir/utils.c.o	a251b0209f145f3c
+159	245	1743057043515004741	Maman14Project	d2af84ae3a320e50

@@ -54,6 +54,7 @@ int countLinesInFile(const char *fileName) {
             lines++;
         }
     }
+    lines++;
 
     fclose(file);
     return lines;
