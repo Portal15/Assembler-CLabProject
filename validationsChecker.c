@@ -234,7 +234,7 @@ int checkInputAnalyzerErrors(const line *l) {
             return 1;
         }
     }
-    for (error = PARAMETER_NAME_IS_NOT_ALLOWED; error <= EMPTY_LABEL_ERROR; error++) {
+    for (error = PARAMETER_NAME_IS_NOT_ALLOWED; error <= LABEL_NAME_TOO_LONG_ERROR; error++) {
         if (l->error == error) {
             printErrorMsg(error, l->lineNum);
             return 1;

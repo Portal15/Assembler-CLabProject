@@ -97,6 +97,12 @@ line analyzeInput(char *inputedLine, int lineNum) {
             return newLine;
         }
         free(currentParm);
+        if (strlen(label) > 30) {
+            free(label);
+            freeCommand(cmd);
+            newLine.error = LABEL_NAME_TOO_LONG_ERROR;
+            return newLine;
+        }
 
         inputedLine = removeSpacesUntilChar(inputedLine); /* Step 4.3: Remove spaces after label */
         if (isEndOfString(inputedLine)) { /* Step 4.4: Check if line is empty */

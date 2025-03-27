@@ -118,6 +118,10 @@ void printErrorMsg(const int errorType, int lineNum){
             printf("-!-     Error: Line is too long at line %d.\n", lineNum);
             fprintf(stderr, "Error: Line is too long at line %d.\n", lineNum);
             break;
+        case LABEL_NAME_TOO_LONG_ERROR:
+            printf("-!-     Error: Label name is too long at line %d.\n", lineNum);
+            fprintf(stderr, "Error: Label name is too long at line %d.\n", lineNum);
+            break;
         default:
             printf("-!-     Error: Unknown error\n");
             fprintf(stderr, "Error: Unknown error.\n");
