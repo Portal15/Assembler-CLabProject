@@ -304,3 +304,4 @@ This is an educational implementation. A few details matter when running the cur
 Built as a university project to explore how assembly source becomes machine code, with emphasis on modular C programming, symbol management, multi-pass translation, and manual memory ownership.
 
 **Author:** [Yonatan Ben Yehuda](https://github.com/Portal15)
+            [Yonatan Shmuel](https://github.com/Yonatan1387)
